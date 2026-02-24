@@ -159,7 +159,8 @@ function CarStage() {
     };
 
     const onLeave = () => {
-      el.style.transform = "perspective(900px) rotateX(0deg) rotateY(0deg) translateZ(0)";
+      el.style.transform =
+        "perspective(900px) rotateX(0deg) rotateY(0deg) translateZ(0)";
     };
 
     el.addEventListener("mousemove", onMove);
@@ -181,27 +182,59 @@ function CarStage() {
       <SparkleField density={48} />
 
       <div className="relative">
-        <div className="kicker text-xs font-semibold text-gold">
-          Luxury automotive primary
+        {/* Hero tagline (small line) */}
+        <div className="text-xs text-muted mb-2">
+          AI and automation, engineered for control.
         </div>
-        <div className="mt-3 text-2xl font-semibold tracking-tight">
-          Secure online reservations for luxury cars
+        {/* Main headline */}
+        <h1 className="text-3xl font-bold mb-2">
+          Governance, proof, and control.
+        </h1>
+        {/* Subheadline */}
+        <div className="text-lg text-muted mb-4">
+          We design and build compliance grade software for high value
+          transactions, with audit ready traceability, automated workflows, and
+          evidence you can rely on.
         </div>
-        <div className="mt-2 text-sm text-muted">
-          Digital sales systems with compliance built in. AI everywhere. Automation everywhere.
+        {/* Supporting line (small) */}
+        <div className="text-xs text-muted mb-6">
+          Built for reputable, branded businesses.
+        </div>
+        {/* Primary CTA buttons */}
+        <div className="flex gap-3 mb-2">
+          <a
+            href="/contact"
+            className="rounded-2xl border border-line bg-bg/30 px-4 py-2 text-sm font-semibold text-text hover:border-gold"
+          >
+            Request a private consult
+          </a>
+          <a
+            href="/products"
+            className="rounded-2xl border border-line bg-bg/30 px-4 py-2 text-sm font-semibold text-text hover:border-gold"
+          >
+            View products
+          </a>
+        </div>
+        {/* Optional micro line under buttons (premium filter) */}
+        <div className="text-xs text-muted mt-1">
+          Projects from 100,000 AED+.
         </div>
 
         <div className="mt-6 grid grid-cols-2 gap-3">
           <div className="rounded-2xl border border-line bg-bg/30 p-4">
             <div className="text-xs font-semibold text-muted">Module</div>
-            <div className="mt-2 text-sm font-semibold">Reservation and deposits</div>
+            <div className="mt-2 text-sm font-semibold">
+              Reservation and deposits
+            </div>
             <div className="mt-1 text-xs text-muted">
               Hold rules, disclosures, receipts, confirmations.
             </div>
           </div>
           <div className="rounded-2xl border border-line bg-bg/30 p-4">
             <div className="text-xs font-semibold text-muted">Module</div>
-            <div className="mt-2 text-sm font-semibold">Fraud controls layer</div>
+            <div className="mt-2 text-sm font-semibold">
+              Fraud controls layer
+            </div>
             <div className="mt-1 text-xs text-muted">
               Risk scoring, velocity limits, identity resolution.
             </div>
@@ -209,7 +242,10 @@ function CarStage() {
         </div>
 
         <div className="mt-6 flex gap-3">
-          <Button href="/products/sovereign-vault-ai-platform" variant="primary">
+          <Button
+            href="/products/sovereign-vault-ai-platform"
+            variant="primary"
+          >
             View flagship platform
           </Button>
           <Button href="/contact" variant="secondary">
@@ -217,17 +253,7 @@ function CarStage() {
           </Button>
         </div>
 
-        <div className="mt-7">
-          <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-goldSoft to-transparent" />
-          <div className="mt-5 grid grid-cols-3 gap-3">
-            <div className="h-12 rounded-2xl bg-bg/40" />
-            <div className="h-12 rounded-2xl bg-bg/40" />
-            <div className="h-12 rounded-2xl bg-bg/40" />
-          </div>
-          <div className="mt-3 text-xs text-muted">
-            Screenshot style previews. Final UI is bespoke per client.
-          </div>
-        </div>
+        {/* Removed preview text and transparent blocks as requested */}
       </div>
     </div>
   );
@@ -244,13 +270,20 @@ export default function Home() {
     tl.fromTo(
       hero.querySelectorAll("[data-word]"),
       { y: 22, opacity: 0, filter: "blur(8px)" },
-      { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.75, stagger: 0.06, ease: "power3.out" }
+      {
+        y: 0,
+        opacity: 1,
+        filter: "blur(0px)",
+        duration: 0.75,
+        stagger: 0.06,
+        ease: "power3.out",
+      },
     );
 
     tl.fromTo(
       hero.querySelectorAll("[data-hero]"),
       { y: 18, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.75, stagger: 0.08, ease: "power3.out" }
+      { y: 0, opacity: 1, duration: 0.75, stagger: 0.08, ease: "power3.out" },
     );
 
     gsap.utils.toArray<HTMLElement>("[data-reveal]").forEach((el) => {
@@ -266,7 +299,7 @@ export default function Home() {
             trigger: el,
             start: "top 80%",
           },
-        }
+        },
       );
     });
 
@@ -283,12 +316,18 @@ export default function Home() {
           <div ref={heroRef} className="py-16 md:py-20">
             <div className="grid gap-10 md:grid-cols-2 md:items-center">
               <div>
-                <div data-hero className="kicker text-xs font-semibold text-gold">
+                <div
+                  data-hero
+                  className="kicker text-xs font-semibold text-gold"
+                >
                   {site.taglineTop}. {site.taglineBottom}.
                 </div>
 
-                <h1 data-hero className="mt-4 max-w-xl text-4xl font-semibold tracking-tight md:text-5xl">
-                  <span className="gradientTextGold" aria-label={site.name}>
+                <h1
+                  data-hero
+                  className="mt-4 max-w-xl text-4xl font-semibold tracking-tight md:text-5xl"
+                >
+                  <span className="text-white" aria-label={site.name}>
                     {site.name.split(" ").map((w, i) => (
                       <span
                         key={w + i}
@@ -311,14 +350,21 @@ export default function Home() {
                 </p>
 
                 <div data-hero className="mt-7 flex flex-wrap gap-3">
-                  <Button href="/contact" variant="primary">Request a private consult</Button>
-                  <Button href="/products" variant="secondary">View products</Button>
+                  <Button href="/contact" variant="primary">
+                    Request a private consult
+                  </Button>
+                  <Button href="/products" variant="secondary">
+                    View products
+                  </Button>
                 </div>
 
                 <div data-hero className="mt-7 text-sm text-muted">
-                  <span className="text-text font-semibold">{site.pricingNote}</span>
+                  <span className="text-text font-semibold">
+                    {site.pricingNote}
+                  </span>
                   <span className="mx-2 text-muted">|</span>
-                  Primary industry: <span className="text-text">{site.primaryIndustry}</span>
+                  Primary industry:{" "}
+                  <span className="text-text">{site.primaryIndustry}</span>
                 </div>
               </div>
 
@@ -390,28 +436,50 @@ export default function Home() {
                 <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-muted">
                   <li>Bespoke software development and web applications</li>
                   <li>Secure customer portals and hosted platforms</li>
-                  <li>End to end implementation (requirements, project management, documentation)</li>
+                  <li>
+                    End to end implementation (requirements, project management,
+                    documentation)
+                  </li>
                   <li>Audit trails and internal governance workflows</li>
-                  <li>Where required: software code security reviews and technology audit services relating to software systems</li>
-                  <li>Anti money laundering style workflows (KYC, monitoring, case handling, record keeping)</li>
-                  <li>Anti theft and secure operational systems (access control, approvals, inventory controls)</li>
-                  <li>Fraud prevention systems (risk scoring, behaviour analysis, velocity controls)</li>
+                  <li>
+                    Where required: software code security reviews and
+                    technology audit services relating to software systems
+                  </li>
+                  <li>
+                    Anti money laundering style workflows (KYC, monitoring, case
+                    handling, record keeping)
+                  </li>
+                  <li>
+                    Anti theft and secure operational systems (access control,
+                    approvals, inventory controls)
+                  </li>
+                  <li>
+                    Fraud prevention systems (risk scoring, behaviour analysis,
+                    velocity controls)
+                  </li>
                   <li>Dispute evidence packs and incident workflows</li>
                 </ul>
               </div>
 
               <div className="glass borderGlow rounded-2xl p-6">
-                <div className="text-sm font-semibold">Compliance and Risk Division (in-house)</div>
+                <div className="text-sm font-semibold">
+                  Compliance and Risk Division (in-house)
+                </div>
                 <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-muted">
                   <li>Risk and compliance workflow design</li>
                   <li>Internal governance and evidence structure</li>
-                  <li>Documentation and trust packs embedded into system flows</li>
+                  <li>
+                    Documentation and trust packs embedded into system flows
+                  </li>
                   <li>Audit readiness structure and traceability</li>
-                  <li>Contracting workflow logic (acceptance, disclosures, approvals)</li>
+                  <li>
+                    Contracting workflow logic (acceptance, disclosures,
+                    approvals)
+                  </li>
                 </ul>
                 <div className="mt-4 text-xs text-muted">
-                  In-house counsel supports governance and documentation within client engagements.
-                  No public legal representation is offered.
+                  In-house counsel supports governance and documentation within
+                  client engagements.
                 </div>
               </div>
             </div>

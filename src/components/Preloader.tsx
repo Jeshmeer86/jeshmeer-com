@@ -23,7 +23,7 @@ export function Preloader() {
       .fromTo(
         bar,
         { scaleX: 0 },
-        { scaleX: 1, duration: 1.0, ease: "power2.out" }
+        { scaleX: 1, duration: 1.0, ease: "power2.out" },
       )
       .to(wrap, { autoAlpha: 0, duration: 0.55, ease: "power2.out" }, "+=0.12");
 
@@ -44,9 +44,7 @@ export function Preloader() {
         <div className="flex items-center justify-center">
           <img src="/logo.svg" alt="Sovereign" className="h-12 w-12" />
         </div>
-        <div className="mt-5 text-center text-xs font-semibold tracking-[0.28em] text-gold">
-          AI everywhere. Automation everywhere.
-        </div>
+        {/* Removed 'AI everywhere. Automation everywhere.' as requested */}
 
         <div className="mt-6 rounded-full border border-line bg-panel/40 p-1">
           <div

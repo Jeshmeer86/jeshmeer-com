@@ -1,7 +1,7 @@
 export const site = {
   name: "Sovereign Compliance Systems FZCO",
-  taglineTop: "AI everywhere",
-  taglineBottom: "Automation everywhere",
+  taglineTop: "AI and automation, engineered for control.",
+  taglineBottom: "",
   headline:
     "Premium systems built for high value transactions, governance, and proof.",
   subhead:

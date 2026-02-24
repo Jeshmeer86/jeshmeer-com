@@ -15,14 +15,22 @@ export default function CompanyPage() {
             <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-muted">
               <li>Bespoke software development and web applications</li>
               <li>Secure customer portals and hosted platforms</li>
-              <li>End to end implementation (requirements, project management, documentation)</li>
+              <li>
+                End to end implementation (requirements, project management,
+                documentation)
+              </li>
               <li>Audit trails and internal governance workflows</li>
-              <li>Where required: software code security reviews and technology audit services relating to software systems</li>
+              <li>
+                Where required: software code security reviews and technology
+                audit services relating to software systems
+              </li>
             </ul>
           </div>
 
           <div className="glass borderGlow rounded-2xl p-6">
-            <div className="text-sm font-semibold">Compliance and Risk Division (in-house)</div>
+            <div className="text-sm font-semibold">
+              Compliance and Risk Division (in-house)
+            </div>
             <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-muted">
               <li>Risk and compliance workflow design</li>
               <li>Internal governance workflow logic</li>
@@ -30,8 +38,8 @@ export default function CompanyPage() {
               <li>Audit readiness thinking built into delivery</li>
             </ul>
             <div className="mt-4 text-xs text-muted">
-              In-house counsel supports governance and documentation within client engagements.
-              No public legal representation is offered.
+              In-house counsel supports governance and documentation within
+              client engagements.
             </div>
           </div>
         </div>

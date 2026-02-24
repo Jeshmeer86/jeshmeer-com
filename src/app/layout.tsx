@@ -7,28 +7,40 @@ import { MagneticCursor } from "@/components/MagneticCursor";
 import { Footer } from "@/components/Footer";
 import { site } from "@/content/site";
 
-const manrope = Manrope({ subsets: ["latin"], weight: ["300","400","500","600","700"] });
+const manrope = Manrope({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+});
 
 export const metadata: Metadata = {
-  title: site.name,
-  description: `${site.taglineTop}. ${site.taglineBottom}. ${site.headline}`,
-  metadataBase: new URL("https://example.com"),
+  metadataBase: new URL("https://jeshmeer.com"),
+  title: {
+    default: "Sovereign Compliance Systems",
+    template: "%s | Sovereign Compliance Systems",
+  },
+  description:
+    "Governance, proof, and control. We design and build compliance grade software for high value transactions, with audit ready traceability, automated workflows, and evidence you can rely on. Built for reputable, branded businesses.",
   openGraph: {
-    title: site.name,
-    description: `${site.taglineTop}. ${site.taglineBottom}. ${site.headline}`,
+    title: "Sovereign Compliance Systems",
+    description:
+      "Governance, proof, and control. We design and build compliance grade software for high value transactions, with audit ready traceability, automated workflows, and evidence you can rely on. Built for reputable, branded businesses.",
+    url: "https://jeshmeer.com",
+    siteName: "Sovereign Compliance Systems",
     type: "website",
   },
-  robots: {
-    index: true,
-    follow: true,
+  twitter: {
+    card: "summary_large_image",
+    title: "Sovereign Compliance Systems",
+    description:
+      "Governance, proof, and control. We design and build compliance grade software for high value transactions, with audit ready traceability, automated workflows, and evidence you can rely on. Built for reputable, branded businesses.",
   },
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en" className={manrope.className}>
       <body>
