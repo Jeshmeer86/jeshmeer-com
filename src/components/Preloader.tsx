@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import gsap from "gsap";
 
 export function Preloader() {
@@ -42,7 +43,13 @@ export function Preloader() {
     >
       <div className="w-full max-w-md px-6">
         <div className="flex items-center justify-center">
-          <img src="/logo.svg" alt="Sovereign" className="h-12 w-12" />
+          <Image
+            src="/logo.svg"
+            alt="Sovereign"
+            width={48}
+            height={48}
+            className="h-12 w-12"
+          />
         </div>
         {/* Removed 'AI everywhere. Automation everywhere.' as requested */}
 

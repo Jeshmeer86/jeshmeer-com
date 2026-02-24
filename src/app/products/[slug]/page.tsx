@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { Container } from "@/components/Container";
+import Image from "next/image";
 import { Section } from "@/components/Section";
 import { CTA } from "@/components/CTA";
 import { Badge } from "@/components/Badge";
@@ -138,10 +139,13 @@ function FlagshipStory() {
       >
         <div className="glass borderGlow rounded-2xl overflow-hidden mb-6">
           <div className="relative">
-            <img
+            <Image
               src="/mockups/vault-dashboard-mockup.jpg"
               alt="Sovereign Vault AI Platform mockup"
+              width={1200}
+              height={600}
               className="w-full object-cover"
+              priority
             />
             <div className="absolute inset-0 bg-gradient-to-t from-bg/70 via-transparent to-transparent" />
           </div>
@@ -154,10 +158,13 @@ function FlagshipStory() {
         <div className="grid gap-4 md:grid-cols-2 mb-6">
           <div className="glass borderGlow rounded-2xl overflow-hidden">
             <div className="relative">
-              <img
+              <Image
                 src="/mockups/case-queue-mockup.jpg"
                 alt="Flagship case queue mockup"
+                width={1200}
+                height={600}
                 className="w-full object-cover"
+                priority
               />
               <div className="absolute inset-0 bg-gradient-to-t from-bg/70 via-transparent to-transparent" />
             </div>
@@ -168,10 +175,13 @@ function FlagshipStory() {
 
           <div className="glass borderGlow rounded-2xl overflow-hidden">
             <div className="relative">
-              <img
+              <Image
                 src="/mockups/metrics-mockup.jpg"
                 alt="Flagship metrics mockup"
+                width={1200}
+                height={600}
                 className="w-full object-cover"
+                priority
               />
               <div className="absolute inset-0 bg-gradient-to-t from-bg/70 via-transparent to-transparent" />
             </div>

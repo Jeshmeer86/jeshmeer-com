@@ -2,6 +2,7 @@ import { Container } from "@/components/Container";
 import { Section } from "@/components/Section";
 import { CTA } from "@/components/CTA";
 import { site } from "@/content/site";
+import Link from "next/link";
 
 export default function AiAutomationPage() {
   return (
@@ -30,18 +31,18 @@ export default function AiAutomationPage() {
         </div>
         {/* Primary CTA buttons */}
         <div className="flex gap-3 mb-2">
-          <a
+          <Link
             href="/contact"
             className="rounded-2xl border border-line bg-bg/30 px-4 py-2 text-sm font-semibold text-text hover:border-gold"
           >
             Request a private consult
-          </a>
-          <a
+          </Link>
+          <Link
             href="/products"
             className="rounded-2xl border border-line bg-bg/30 px-4 py-2 text-sm font-semibold text-text hover:border-gold"
           >
             View products
-          </a>
+          </Link>
         </div>
         {/* Optional micro line under buttons (premium filter) */}
         <div className="text-xs text-muted mt-1">

@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import { Container } from "@/components/Container";
+import Link from "next/link";
 import { Button } from "@/components/Button";
 import { Section } from "@/components/Section";
 import { CTA } from "@/components/CTA";
@@ -202,18 +203,18 @@ function CarStage() {
         </div>
         {/* Primary CTA buttons */}
         <div className="flex gap-3 mb-2">
-          <a
+          <Link
             href="/contact"
             className="rounded-2xl border border-line bg-bg/30 px-4 py-2 text-sm font-semibold text-text hover:border-gold"
           >
             Request a private consult
-          </a>
-          <a
+          </Link>
+          <Link
             href="/products"
             className="rounded-2xl border border-line bg-bg/30 px-4 py-2 text-sm font-semibold text-text hover:border-gold"
           >
             View products
-          </a>
+          </Link>
         </div>
         {/* Optional micro line under buttons (premium filter) */}
         <div className="text-xs text-muted mt-1">

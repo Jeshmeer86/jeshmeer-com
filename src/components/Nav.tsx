@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import { Container } from "./Container";
 import { site } from "@/content/site";
@@ -42,15 +43,21 @@ export function Nav() {
       <Container>
         <div className="flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center gap-3" data-magnetic>
-            <img
+            <Image
               src="/brand/mark.svg"
               alt="Sovereign"
+              width={40}
+              height={40}
               className="h-10 w-10 rounded-2xl border border-line bg-bg/30 shadow-soft md:hidden"
+              priority
             />
-            <img
+            <Image
               src="/brand/logo-full.svg"
               alt="Sovereign Compliance Systems"
+              width={160}
+              height={40}
               className="hidden h-10 md:block"
+              priority
             />
             <div className="leading-tight md:hidden">
               <div className="text-sm font-semibold tracking-tight">
