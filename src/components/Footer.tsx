@@ -53,6 +53,9 @@ export function Footer() {
             <div className="mt-3 text-sm text-muted">
               Email: <span className="text-text">{site.contactEmail}</span>
             </div>
+            <div className="mt-3 text-sm text-muted">
+              Number: +97156 87 44 925
+            </div>
             <div className="mt-2 text-sm text-muted">{site.pricingNote}</div>
             <div className="mt-4 text-xs text-muted">
               In-house counsel supports governance and documentation within

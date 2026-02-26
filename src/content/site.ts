@@ -5,7 +5,7 @@ export const site = {
   headline:
     "Premium systems built for high value transactions, governance, and proof.",
   subhead:
-    "We design and build bespoke software that reduces manual work, increases flow, and creates audit grade traceability.",
+    "We design and build bespoke software that reduces manual work, increases flow, and creates audit grade traceability using our latest AI and Automation Tools.",
   pricingNote: "Projects from 100,000 AED+",
   primaryIndustry: "Luxury Automotive",
   industries: [

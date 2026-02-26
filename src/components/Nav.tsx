@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Button } from "./Button";
 import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import { Container } from "./Container";
@@ -9,6 +10,8 @@ import { site } from "@/content/site";
 const nav = [
   { href: "/products", label: "Products" },
   { href: "/ai-automation", label: "AI and Automation" },
+  { href: "/proof-pack", label: "Proof Pack" },
+  { href: "/governance-pack", label: "Governance Pack" },
   { href: "/how-we-work", label: "How we work" },
   { href: "/security-assurance", label: "Security and Assurance" },
   { href: "/company", label: "Company structure" },
@@ -16,9 +19,10 @@ const nav = [
 ];
 export function Nav() {
   const [industriesOpen, setIndustriesOpen] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const industriesRef = useRef<HTMLDivElement>(null);
 
-  // Close submenu when clicking outside
+  // Close submenu when clicking outside (desktop)
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -66,6 +70,7 @@ export function Nav() {
             </div>
           </Link>
 
+          {/* Desktop nav */}
           <nav className="hidden items-center gap-5 md:flex">
             {nav.slice(0, 2).map((i) => (
               <Link
@@ -127,30 +132,105 @@ export function Nav() {
               </div>
             </div>
 
-            {nav.slice(2).map((i) => (
+            {nav.slice(2).map((i) =>
+              i.href === "/contact" ? (
+                <Button key={i.href} href={i.href} variant="secondary">
+                  {i.label}
+                </Button>
+              ) : (
+                <Link
+                  key={i.href}
+                  href={i.href}
+                  className="text-sm text-muted hover:text-platinum"
+                  data-magnetic
+                >
+                  {i.label}
+                </Link>
+              ),
+            )}
+          </nav>
+
+          {/* Mobile hamburger button */}
+          <button
+            className="md:hidden flex items-center px-2 py-2 rounded focus:outline-none focus:ring-2 focus:ring-gold"
+            aria-label="Open menu"
+            onClick={() => setMobileNavOpen((v) => !v)}
+          >
+            <span className="sr-only">Open menu</span>
+            <svg
+              className="h-6 w-6 text-gold"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
+        </div>
+
+        {/* Mobile nav menu */}
+        {mobileNavOpen && (
+          <div className="md:hidden fixed inset-0 z-50 bg-bg/95 flex flex-col p-6 gap-4 animate-fade-in">
+            <button
+              className="self-end mb-4 p-2 rounded focus:outline-none focus:ring-2 focus:ring-gold"
+              aria-label="Close menu"
+              onClick={() => setMobileNavOpen(false)}
+            >
+              <svg
+                className="h-6 w-6 text-gold"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+            {nav.map((i) => (
               <Link
                 key={i.href}
                 href={i.href}
-                className={
-                  i.href === "/contact"
-                    ? "rounded-2xl border border-line bg-bg/30 px-4 py-2 text-sm font-semibold text-text hover:border-gold"
-                    : "text-sm text-muted hover:text-platinum"
-                }
-                data-magnetic
+                className="text-lg font-semibold text-text py-2 px-2 rounded hover:bg-panel/40"
+                onClick={() => setMobileNavOpen(false)}
               >
                 {i.label}
               </Link>
             ))}
-          </nav>
-
-          <Link
-            href="/contact"
-            data-magnetic
-            className="rounded-2xl border border-line bg-bg/30 px-4 py-2 text-sm text-text hover:border-gold md:hidden"
-          >
-            Contact
-          </Link>
-        </div>
+            <div className="mt-4">
+              <span className="block text-xs text-muted">Industries</span>
+              <Link
+                href="/industries/luxury-automotive"
+                className="block text-sm py-2 px-2 rounded hover:bg-panel/40"
+                onClick={() => setMobileNavOpen(false)}
+              >
+                Luxury Automotive (Primary)
+              </Link>
+              <Link
+                href="/industries/luxury-property"
+                className="block text-sm py-2 px-2 rounded hover:bg-panel/40"
+                onClick={() => setMobileNavOpen(false)}
+              >
+                Luxury Property
+              </Link>
+              <Link
+                href="/industries/hospitals-medical-centers"
+                className="block text-sm py-2 px-2 rounded hover:bg-panel/40"
+                onClick={() => setMobileNavOpen(false)}
+              >
+                Hospitals and Medical Centers
+              </Link>
+            </div>
+          </div>
+        )}
       </Container>
     </header>
   );

@@ -55,9 +55,9 @@ export default function AiAutomationPage() {
               <li>
                 AI assisted triage for suspicious activity and exception queues
               </li>
-              <li>Anomaly detection on behaviour and transaction patterns</li>
+              <li>Anomaly detection on behavior and transaction patterns</li>
               <li>
-                Document extraction and summarisation for forms, disclosures,
+                Document extraction and summarization for forms, disclosures,
                 and records
               </li>
               <li>

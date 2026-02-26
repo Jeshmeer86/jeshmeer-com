@@ -20,14 +20,15 @@ export default function ProductsPage() {
             Products
           </h1>
           <p className="mt-3 max-w-3xl text-sm text-muted">
-            Every product is designed with AI and automation as the first layer, so the system creates less work and more flow.
+            Every product is designed with AI and automation as the first layer,
+            so the system creates less work and more flow.
           </p>
         </div>
       </div>
 
       <Section
         title="Product list"
-        subtitle="Flagship first. Then the core modules. Then add-ons."
+        subtitle="Flagship first, core modules, add-ons."
       >
         <div className="grid gap-4 md:grid-cols-2">
           {products.map((p) => (
