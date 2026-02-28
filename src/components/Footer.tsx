@@ -27,23 +27,23 @@ export function Footer() {
               <Link href="/ai-automation" className="hover:text-text">
                 AI and Automation
               </Link>
-              <Link
-                href="/industries/luxury-automotive"
-                className="hover:text-text"
-              >
-                Luxury Automotive
+              <Link href="/industries" className="hover:text-text">
+                Industries
               </Link>
-              <Link
-                href="/industries/luxury-property"
-                className="hover:text-text"
-              >
-                Luxury Property
+              <Link href="/trust-center" className="hover:text-text">
+                Trust Center
               </Link>
-              <Link
-                href="/industries/hospitals-medical-centers"
-                className="hover:text-text"
-              >
-                Hospitals and Medical Centers
+            </div>
+            <div className="mt-6 text-sm font-semibold">Legal</div>
+            <div className="mt-3 grid gap-2 text-sm text-muted">
+              <Link href="/privacy-policy" className="hover:text-text">
+                Privacy Policy
+              </Link>
+              <Link href="/cookie-policy" className="hover:text-text">
+                Cookie Policy
+              </Link>
+              <Link href="/terms" className="hover:text-text">
+                Terms &amp; Conditions
               </Link>
             </div>
           </div>

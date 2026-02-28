@@ -1,350 +1,32 @@
 "use client";
-// Contact form block copied from contact page
-import { useState, useRef, useEffect } from "react";
 
-function ContactFormBlock() {
-  const [status, setStatus] = useState("idle");
-
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setStatus("sending");
-    const form = new FormData(e.currentTarget);
-    const payload = Object.fromEntries(form.entries());
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      if (!res.ok) throw new Error("Request failed");
-      setStatus("sent");
-      e.currentTarget.reset();
-    } catch {
-      setStatus("error");
-    }
-  }
-  return (
-    <div className="glass borderGlow rounded-2xl p-6">
-      <div className="text-sm font-semibold">Private consult request</div>
-      <p className="mt-2 text-sm text-muted">
-        AI and automation are built into every system. Tell us what you sell,
-        and what the workflow must achieve.
-      </p>
-      <form className="mt-5 grid gap-3" onSubmit={onSubmit}>
-        <input
-          className="rounded-xl border border-line bg-bg px-3 py-2 text-sm"
-          name="company"
-          placeholder="Company name"
-          required
-        />
-        <input
-          className="rounded-xl border border-line bg-bg px-3 py-2 text-sm"
-          name="industry"
-          placeholder="Industry (example: luxury automotive)"
-          required
-        />
-        <input
-          className="rounded-xl border border-line bg-bg px-3 py-2 text-sm"
-          name="projectRange"
-          placeholder="Project range (100k+ AED)"
-          required
-        />
-        <textarea
-          className="min-h-[120px] rounded-xl border border-line bg-bg px-3 py-2 text-sm"
-          name="message"
-          placeholder="What do you want the system to do?"
-          required
-        />
-        <button
-          type="submit"
-          disabled={status === "sending"}
-          className="rounded-xl bg-gold px-6 py-3 text-base font-semibold text-bg hover:opacity-90 disabled:opacity-60"
-        >
-          {status === "sending" ? "Sending..." : "Send"}
-        </button>
-        {status === "sent" ? (
-          <div className="text-sm text-gold">
-            Sent. We will respond with a private consult invite.
-          </div>
-        ) : null}
-        {status === "error" ? (
-          <div className="text-sm text-danger">
-            Something went wrong. Please email us directly.
-          </div>
-        ) : null}
-      </form>
-    </div>
-  );
-}
-// ...existing code...
-
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import { Container } from "@/components/Container";
-import Link from "next/link";
-import { Button } from "@/components/Button";
 import { Section } from "@/components/Section";
 import { CTA } from "@/components/CTA";
-import { site } from "@/content/site";
-import { products } from "@/content/products";
-import { industries } from "@/content/industries";
-import { ProductCard } from "@/components/ProductCard";
-import { IndustryCard } from "@/components/IndustryCard";
-import { HeroBackdrop } from "@/components/HeroBackdrop";
+import { Button } from "@/components/Button";
 import { LiquidGlowSweep } from "@/components/LiquidGlowSweep";
-import { SparkleField } from "@/components/SparkleField";
+import { ContactFormBlock } from "@/components/ContactFormBlock";
+import { FeatureStrip } from "@/components/FeatureStrip";
+import { Preloader } from "@/components/Preloader";
+import CookieConsent from "@/components/CookieConsent";
+
+import { site } from "@/content/site";
 
 gsap.registerPlugin(ScrollTrigger);
 
-function IconShield() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-      <path
-        d="M12 2l8 4v7c0 5-3.5 9-8 9s-8-4-8-9V6l8-4z"
-        stroke="rgba(200,162,74,0.95)"
-        strokeWidth="1.8"
-      />
-      <path
-        d="M8.8 12.2l2.3 2.3 4.5-5"
-        stroke="rgba(215,222,230,0.95)"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function IconLock() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-      <path
-        d="M7 11V8a5 5 0 0110 0v3"
-        stroke="rgba(200,162,74,0.95)"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-      <path
-        d="M6 11h12v10H6V11z"
-        stroke="rgba(215,222,230,0.95)"
-        strokeWidth="1.8"
-      />
-    </svg>
-  );
-}
-
-function IconTrail() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-      <path
-        d="M7 7h10M7 12h10M7 17h6"
-        stroke="rgba(215,222,230,0.95)"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-      <path
-        d="M4 4h16v16H4V4z"
-        stroke="rgba(200,162,74,0.95)"
-        strokeWidth="1.8"
-      />
-    </svg>
-  );
-}
-
-function IconPrivacy() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-      <path
-        d="M12 2l8 4v7c0 5-3.5 9-8 9s-8-4-8-9V6l8-4z"
-        stroke="rgba(200,162,74,0.95)"
-        strokeWidth="1.8"
-      />
-      <path
-        d="M9.5 12a2.5 2.5 0 105 0 2.5 2.5 0 00-5 0z"
-        stroke="rgba(215,222,230,0.95)"
-        strokeWidth="1.8"
-      />
-    </svg>
-  );
-}
-
-function FeatureStrip() {
-  const items = [
-    {
-      icon: <IconShield />,
-      title: "Streamlined deposits",
-      desc: "Less admin work. Clear acceptance. Strong proof.",
-    },
-    {
-      icon: <IconLock />,
-      title: "Sales protection",
-      desc: "Fraud resistance and controlled approvals.",
-    },
-    {
-      icon: <IconTrail />,
-      title: "Audit trails",
-      desc: "Time stamped actions. Evidence packs in seconds.",
-    },
-    {
-      icon: <IconPrivacy />,
-      title: "Privacy assurance",
-      desc: "Access controls and traceable governance.",
-    },
-  ];
-
-  return (
-    <div className="glass borderGlow rounded-2xl">
-      <div className="grid gap-0 border-b border-line md:grid-cols-4">
-        {items.map((x) => (
-          <div key={x.title} className="p-5 md:p-6">
-            <div className="flex items-center gap-3">
-              <div className="rounded-xl border border-line bg-bg/30 p-2">
-                {x.icon}
-              </div>
-              <div className="text-sm font-semibold">{x.title}</div>
-            </div>
-            <div className="mt-2 text-xs text-muted">{x.desc}</div>
-          </div>
-        ))}
-      </div>
-      <div className="flex items-center justify-between gap-4 p-5 md:p-6">
-        <div className="text-sm text-muted">
-          {site.pricingNote}. Reputable, branded businesses only.
-        </div>
-        <Button href="/contact" variant="secondary">
-          Schedule a discovery session
-        </Button>
-      </div>
-    </div>
-  );
-}
-
-function CarStage() {
-  const ref = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    const onMove = (e: MouseEvent) => {
-      const r = el.getBoundingClientRect();
-      const px = (e.clientX - r.left) / r.width;
-      const py = (e.clientY - r.top) / r.height;
-      const rx = (py - 0.5) * -8;
-      const ry = (px - 0.5) * 10;
-      el.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateZ(0)`;
-    };
-
-    const onLeave = () => {
-      el.style.transform =
-        "perspective(900px) rotateX(0deg) rotateY(0deg) translateZ(0)";
-    };
-
-    el.addEventListener("mousemove", onMove);
-    el.addEventListener("mouseleave", onLeave);
-    return () => {
-      el.removeEventListener("mousemove", onMove);
-      el.removeEventListener("mouseleave", onLeave);
-    };
-  }, []);
-
-  return (
-    <div
-      ref={ref}
-      className="relative glass borderGlow rounded-2xl p-6 transition-transform duration-300"
-      style={{ transform: "perspective(900px) rotateX(0deg) rotateY(0deg)" }}
-    >
-      <HeroBackdrop />
-      <div className="sparkleGlow" />
-      <SparkleField density={48} />
-
-      <div className="relative">
-        {/* Hero tagline (small line) */}
-        <div className="text-xs text-muted mb-2">
-          AI and automation, engineered for control.
-        </div>
-        {/* Main headline */}
-        <h1 className="text-3xl font-bold mb-2">
-          Governance, proof, and control.
-        </h1>
-        {/* Subheadline */}
-        <div className="text-lg text-muted mb-4">
-          We design and build compliance grade software for high value
-          transactions, with audit ready traceability, automated workflows, and
-          evidence you can rely on.
-        </div>
-        {/* Supporting line (small) */}
-        <div className="text-xs text-muted mb-6">
-          Built for reputable, branded businesses.
-        </div>
-        {/* Primary CTA buttons */}
-        <div className="flex gap-3 mb-2">
-          <Link
-            href="/contact"
-            className="rounded-2xl border border-line bg-bg/30 px-4 py-2 text-sm font-semibold text-text hover:border-gold"
-          >
-            Request a private consult
-          </Link>
-          <Link
-            href="/products"
-            className="rounded-2xl border border-line bg-bg/30 px-4 py-2 text-sm font-semibold text-text hover:border-gold"
-          >
-            View products
-          </Link>
-        </div>
-        {/* Optional micro line under buttons (premium filter) */}
-        <div className="text-xs text-muted mt-1">
-          Projects from 100,000 AED+.
-        </div>
-
-        <div className="mt-6 grid grid-cols-2 gap-3">
-          <div className="rounded-2xl border border-line bg-bg/30 p-4">
-            <div className="text-xs font-semibold text-muted">Module</div>
-            <div className="mt-2 text-sm font-semibold">
-              Reservation and deposits
-            </div>
-            <div className="mt-1 text-xs text-muted">
-              Hold rules, disclosures, receipts, confirmations.
-            </div>
-          </div>
-          <div className="rounded-2xl border border-line bg-bg/30 p-4">
-            <div className="text-xs font-semibold text-muted">Module</div>
-            <div className="mt-2 text-sm font-semibold">
-              Fraud controls layer
-            </div>
-            <div className="mt-1 text-xs text-muted">
-              Risk scoring, velocity limits, identity resolution.
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-6 flex gap-3">
-          <Button
-            href="/products/sovereign-vault-ai-platform"
-            variant="primary"
-          >
-            View flagship platform
-          </Button>
-          <Button href="/contact" variant="secondary">
-            Book a consultation
-          </Button>
-        </div>
-
-        {/* Removed preview text and transparent blocks as requested */}
-      </div>
-    </div>
-  );
-}
-
 export default function Home() {
-  const heroRef = useRef<HTMLDivElement | null>(null);
+  const heroRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const hero = heroRef.current;
-    if (!hero) return;
+    if (!heroRef.current) return;
 
+    const hero = heroRef.current;
     const tl = gsap.timeline();
+
     tl.fromTo(
       hero.querySelectorAll("[data-word]"),
       { y: 22, opacity: 0, filter: "blur(8px)" },
@@ -364,7 +46,7 @@ export default function Home() {
       { y: 0, opacity: 1, duration: 0.75, stagger: 0.08, ease: "power3.out" },
     );
 
-    gsap.utils.toArray<HTMLElement>("[data-reveal]").forEach((el) => {
+    (gsap.utils.toArray("[data-reveal]") as HTMLElement[]).forEach((el) => {
       gsap.fromTo(
         el,
         { y: 16, opacity: 0 },
@@ -389,213 +71,493 @@ export default function Home() {
 
   return (
     <>
-      <div className="border-b border-line">
+      <Preloader />
+      <CookieConsent />
+
+      <main>
+        {/* HERO */}
+        <div className="border-b border-line">
+          <Container>
+            <div ref={heroRef} className="py-16 md:py-20">
+              <div className="grid gap-10 md:grid-cols-2 md:items-center">
+                {/* Left */}
+                <div>
+                  <div
+                    data-hero
+                    className="kicker text-xs font-semibold text-gold"
+                  >
+                    {site.taglineTop}. {site.taglineBottom}.
+                  </div>
+
+                  <h1 className="mt-4 text-4xl font-bold">{site.headline}</h1>
+
+                  <p data-hero className="mt-5 max-w-xl text-lg text-muted">
+                    {site.subhead}
+                  </p>
+
+                  <div data-hero className="mt-7 flex flex-wrap gap-3">
+                    <Button href="/contact" variant="primary">
+                      Request a private consult
+                    </Button>
+                    <Button href="/products" variant="secondary">
+                      View products
+                    </Button>
+                  </div>
+
+                  <div data-hero className="mt-7 text-sm text-muted">
+                    <span className="text-text font-semibold">
+                      {site.pricingNote}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Right */}
+                <div data-hero>
+                  <div className="glass borderGlow relative flex min-h-[340px] flex-col justify-between overflow-hidden rounded-2xl p-7 md:p-8">
+                    <div>
+                      <div className="kicker mb-2 text-xs font-semibold tracking-widest text-gold">
+                        CAR DEALERSHIP AND REAL ESTATE SPECIALIST
+                      </div>
+
+                      <h2 className="mb-2 text-2xl font-semibold text-white md:text-3xl">
+                        Secure online reservations for luxury cars
+                      </h2>
+
+                      <div className="mb-4 text-base text-muted">
+                        Digital sales systems with compliance built in.
+                      </div>
+
+                      <div className="mb-4 grid grid-cols-2 gap-3">
+                        <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+                          <div className="mb-1 text-xs font-semibold text-gold">
+                            Module
+                          </div>
+                          <div className="text-sm font-semibold text-white">
+                            Reservation and deposits
+                          </div>
+                          <div className="mt-1 text-xs text-muted">
+                            Hold rules, disclosures, receipts, confirmations.
+                          </div>
+                        </div>
+
+                        <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+                          <div className="mb-1 text-xs font-semibold text-gold">
+                            Module
+                          </div>
+                          <div className="text-sm font-semibold text-white">
+                            Fraud controls layer
+                          </div>
+                          <div className="mt-1 text-xs text-muted">
+                            Risk scoring, velocity limits, identity resolution.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-2 flex flex-wrap gap-3">
+                      {/* buttons removed */}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/*<div className="mt-10" data-hero>
+                <FeatureStrip />
+              </div>
+
+              {/*<div className="mt-14 hrSoft" />*/}
+
+              {/*<div className="mt-8" data-hero>
+                <div className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 p-4 md:p-6">
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+                    {/* optional feature summary cards */}
+              {/*</div>
+
+                  <div className="mt-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                    <div className="text-xs text-muted">
+                      Projects from 100,000 AED+. Reputable, branded businesses
+                      only.
+                    </div>
+                    <Button href="/contact" variant="secondary">
+                      Schedule a discovery session
+                    </Button>
+                  </div>
+                </div>
+              </div>*/}
+            </div>
+          </Container>
+        </div>
+
+        {/* Divider between HERO and BODY */}
+        <div className="my-10">
+          <LiquidGlowSweep id="b" />
+        </div>
+
+        {/* BODY */}
         <Container>
-          <div ref={heroRef} className="py-16 md:py-20">
-            <div className="grid gap-10 md:grid-cols-2 md:items-center">
-              <div>
-                <div
-                  data-hero
-                  className="kicker text-xs font-semibold text-gold"
-                >
-                  {site.taglineTop}. {site.taglineBottom}.
-                </div>
+          <div className="py-14" />
 
-                <h1
-                  data-hero
-                  className="mt-4 max-w-xl text-4xl font-semibold tracking-tight md:text-5xl"
-                >
-                  <span className="text-white" aria-label={site.name}>
-                    {site.name.split(" ").map((w, i) => (
-                      <span
-                        key={w + i}
-                        data-word
-                        className="inline-block will-change-transform"
-                        style={{ marginRight: "0.28em" }}
-                      >
-                        {w}
-                      </span>
-                    ))}
-                  </span>
-                </h1>
-
-                <p data-hero className="mt-5 max-w-xl text-lg text-muted">
-                  {site.headline}
-                </p>
-
-                <p data-hero className="mt-4 max-w-xl text-sm text-muted">
-                  {site.subhead}
-                </p>
-
-                <div data-hero className="mt-7 flex flex-wrap gap-3">
-                  <Button href="/contact" variant="primary">
-                    Request a private consult
-                  </Button>
-                  <Button href="/products" variant="secondary">
-                    View products
-                  </Button>
-                </div>
-
-                <div data-hero className="mt-7 text-sm text-muted">
-                  <span className="text-text font-semibold">
-                    {site.pricingNote}
-                  </span>
-                  <span className="mx-2 text-muted">|</span>
-                  Primary industry:{" "}
-                  <span className="text-text">{site.primaryIndustry}</span>
-                </div>
+          <div className="grid gap-4 md:grid-cols-2" data-reveal>
+            {/* Core */}
+            <div className="glass borderGlow rounded-2xl px-6 pb-2 pt-6">
+              <h3 className="mb-2 text-lg font-bold">
+                Compliance Workflow Hub{" "}
+                <span className="ml-2 text-xs font-semibold text-gold">
+                  Core
+                </span>
+              </h3>
+              <div className="mb-2 text-base">
+                Internal governance workflows that enforce approvals, separation
+                of duties, and accountability by design.
               </div>
-
-              <div data-hero>
-                <CarStage />
+              <ul className="mb-2 list-disc pl-6 text-sm">
+                <li>Reduced internal risk through controlled processes</li>
+                <li>Audit readiness through structured records</li>
+                <li>Less error through automation and guided steps</li>
+              </ul>
+              <div className="mt-2 flex gap-3">
+                <Button href="/contact" variant="primary">
+                  Request a private consult
+                </Button>
+                <Button href="/flagship" variant="secondary">
+                  View details
+                </Button>
               </div>
             </div>
 
-            <div className="mt-10" data-hero>
-              <FeatureStrip />
+            <div className="glass borderGlow rounded-2xl px-6 pb-2 pt-6">
+              <h3 className="mb-2 text-lg font-bold">
+                Audit Trail and Evidence Vault{" "}
+                <span className="ml-2 text-xs font-semibold text-gold">
+                  Core
+                </span>
+              </h3>
+              <div className="mb-2 text-base">
+                Evidence grade audit trails with time stamped history,
+                versioning, and exportable packs for disputes and audits.
+              </div>
+              <ul className="mb-2 list-disc pl-6 text-sm">
+                <li>Clear proof for disputes and investigations</li>
+                <li>Traceable decision making</li>
+                <li>Better operational discipline</li>
+              </ul>
+              <div className="mt-2 flex gap-3">
+                <Button href="/contact" variant="primary">
+                  Request a private consult
+                </Button>
+                <Button href="/flagship" variant="secondary">
+                  View details
+                </Button>
+              </div>
             </div>
 
-            <div className="mt-14 hrSoft" />
+            <div className="glass borderGlow rounded-2xl px-6 pb-2 pt-6">
+              <h3 className="mb-2 text-lg font-bold">
+                Fraud Controls Layer{" "}
+                <span className="ml-2 text-xs font-semibold text-gold">
+                  Core
+                </span>
+              </h3>
+              <div className="mb-2 text-base">
+                Risk scoring, behaviour analysis, velocity thresholds, and case
+                workflows to reduce fraud while protecting conversion.
+              </div>
+              <ul className="mb-2 list-disc pl-6 text-sm">
+                <li>
+                  Reduced fraudulent attempts and card testing style activity
+                </li>
+                <li>
+                  Less manual review through automation and AI assisted triage
+                </li>
+                <li>
+                  Better control of false positives through tuning and
+                  monitoring
+                </li>
+              </ul>
+              <div className="mt-2 flex gap-3">
+                <Button href="/contact" variant="primary">
+                  Request a private consult
+                </Button>
+                <Button href="/flagship" variant="secondary">
+                  View details
+                </Button>
+              </div>
+            </div>
+
+            {/* Add-ons */}
+            <div className="glass borderGlow rounded-2xl px-6 pb-2 pt-6">
+              <h3 className="mb-2 text-lg font-bold">
+                AML and Financial Crime Controls Suite{" "}
+                <span className="ml-2 text-xs font-semibold text-gold">
+                  Add-on
+                </span>
+              </h3>
+              <div className="mb-2 text-base">
+                Software workflows for KYC style onboarding, risk based
+                monitoring, alerts, and record keeping to support AML and
+                financial crime controls.
+              </div>
+              <ul className="mb-2 list-disc pl-6 text-sm">
+                <li>Cleaner onboarding and verification steps</li>
+                <li>Consistent records and review trails</li>
+                <li>
+                  Lower exposure through structured monitoring and escalation
+                </li>
+              </ul>
+              <div className="mt-2 flex gap-3">
+                <Button href="/contact" variant="primary">
+                  Request a private consult
+                </Button>
+                <Button href="/flagship" variant="secondary">
+                  View details
+                </Button>
+              </div>
+            </div>
+
+            <div className="glass borderGlow rounded-2xl px-6 pb-2 pt-6">
+              <h3 className="mb-2 text-lg font-bold">
+                Security Review and Technology Audit{" "}
+                <span className="ml-2 text-xs font-semibold text-gold">
+                  Add-on
+                </span>
+              </h3>
+              <div className="mb-2 text-base">
+                Security oriented review of your system controls, access, logs,
+                and architecture with a documented outcome.
+              </div>
+              <ul className="mb-2 list-disc pl-6 text-sm">
+                <li>
+                  Reduced security risk through a clear review and action plan
+                </li>
+                <li>More confidence for leadership and stakeholders</li>
+                <li>Better governance around access and change control</li>
+              </ul>
+              <div className="mt-2 flex gap-3">
+                <Button href="/contact" variant="primary">
+                  Request a private consult
+                </Button>
+                <Button href="/flagship" variant="secondary">
+                  View details
+                </Button>
+              </div>
+            </div>
+
+            <div className="glass borderGlow rounded-2xl px-6 pb-2 pt-6">
+              <h3 className="mb-2 text-lg font-bold">
+                Documentation and Trust Pack{" "}
+                <span className="ml-2 text-xs font-semibold text-gold">
+                  Add-on
+                </span>
+              </h3>
+              <div className="mb-2 text-base">
+                The governance and documentation layer that makes the system
+                defensible and operationally consistent.
+              </div>
+              <ul className="mb-2 list-disc pl-6 text-sm">
+                <li>Clear disclosures and acceptance flows</li>
+                <li>Stronger internal governance and evidence</li>
+                <li>More confidence when disputes happen</li>
+              </ul>
+              <div className="mt-2 flex gap-3">
+                <Button href="/contact" variant="primary">
+                  Request a private consult
+                </Button>
+                <Button href="/flagship" variant="secondary">
+                  View details
+                </Button>
+              </div>
+            </div>
           </div>
-        </Container>
-      </div>
 
-      <Container>
-        <LiquidGlowSweep id="a" />
-        <div data-reveal>
-          <Section
-            title="Industries we serve"
-            subtitle="Luxury automotive is the primary focus. We also build equivalent governance grade systems for luxury property and medical environments."
-          >
-            <div className="grid gap-4 md:grid-cols-3">
-              <IndustryCard
-                name={industries[0].name}
-                slug={industries[0].slug}
-                lead={industries[0].lead}
-                primary
-              />
-              <IndustryCard
-                name={industries[1].name}
-                slug={industries[1].slug}
-                lead={industries[1].lead}
-              />
-              <IndustryCard
-                name={industries[2].name}
-                slug={industries[2].slug}
-                lead={industries[2].lead}
-              />
-            </div>
-          </Section>
-        </div>
-
-        <LiquidGlowSweep id="b" />
-        <div data-reveal>
-          <Section
-            title="Products"
-            subtitle="Flagship first, core modules, add-ons."
-          >
-            <div className="grid gap-4 md:grid-cols-2">
-              {products.slice(0, 6).map((p) => (
-                <ProductCard key={p.slug} p={p} />
-              ))}
-            </div>
-          </Section>
-        </div>
-
-        <LiquidGlowSweep id="c" />
-        <div data-reveal>
-          <Section
-            title="What we deliver"
-            subtitle="Software and workflow engineering, built with governance, proof, and high-end motion design."
-          >
+          {/* Security and Assurance */}
+          <div className="mt-8" data-reveal>
+            <h4 className="mb-2 text-base font-semibold">
+              Security and Assurance
+            </h4>
             <div className="grid gap-4 md:grid-cols-2">
               <div className="glass borderGlow rounded-2xl p-6">
-                <div className="text-sm font-semibold">Technology Division</div>
+                <div className="text-sm font-semibold">
+                  Core assurance layer
+                </div>
                 <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-muted">
-                  <li>Bespoke software development and web applications</li>
-                  <li>Secure customer portals and hosted platforms</li>
-                  <li>
-                    End to end implementation (requirements, project management,
-                    documentation)
-                  </li>
-                  <li>Audit trails and internal governance workflows</li>
-                  <li>
-                    Where required: software code security reviews and
-                    technology audit services relating to software systems
-                  </li>
-                  <li>
-                    Anti money laundering style workflows (KYC, monitoring, case
-                    handling, record keeping)
-                  </li>
-                  <li>
-                    Anti theft and secure operational systems (access control,
-                    approvals, inventory controls)
-                  </li>
-                  <li>
-                    Fraud prevention systems (risk scoring, behaviour analysis,
-                    velocity controls)
-                  </li>
-                  <li>Dispute evidence packs and incident workflows</li>
+                  <li>Role based access control and privilege boundaries</li>
+                  <li>Audit logs and time stamped actions</li>
+                  <li>Change control and version history</li>
+                  <li>Evidence export packs for disputes and audits</li>
+                  <li>Exception workflows with review notes</li>
                 </ul>
               </div>
 
               <div className="glass borderGlow rounded-2xl p-6">
                 <div className="text-sm font-semibold">
-                  Compliance and Risk Division (in-house)
+                  Optional review services
                 </div>
                 <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-muted">
-                  <li>Risk and compliance workflow design</li>
-                  <li>Internal governance and evidence structure</li>
+                  <li>Architecture and access review</li>
+                  <li>Logging and monitoring review</li>
+                  <li>Secure coding review where required</li>
                   <li>
-                    Documentation and trust packs embedded into system flows
-                  </li>
-                  <li>Audit readiness structure and traceability</li>
-                  <li>
-                    Contracting workflow logic (acceptance, disclosures,
-                    approvals)
+                    Technology audit services relating to software systems where
+                    required
                   </li>
                 </ul>
-                <div className="mt-4 text-xs text-muted">
-                  In-house counsel supports governance and documentation within
-                  client engagements.
+              </div>
+            </div>
+          </div>
+
+          <LiquidGlowSweep id="c" />
+
+          <div data-reveal>
+            <Section
+              title="UAE Online Compliance, Built In"
+              subtitle="Trust Pack Included"
+            >
+              <ul className="mb-4 list-disc space-y-2 pl-6 text-base">
+                <li>
+                  Privacy policy framework aligned to UAE PDPL-style
+                  transparency expectations
+                </li>
+                <li>
+                  Cookie consent banner + preference controls (essential vs
+                  optional)
+                </li>
+                <li>
+                  Terms & Conditions designed for online journeys (forms,
+                  bookings, deposits, portals)
+                </li>
+                <li>
+                  Data capture minimization (only collect what is needed) and
+                  retention notes
+                </li>
+                <li>
+                  Audit trail options for key user actions (consent,
+                  submissions, approvals)
+                </li>
+                <li>
+                  Evidence pack documentation for internal governance and
+                  accountability
+                </li>
+              </ul>
+
+              <div className="mb-4 text-base text-muted">
+                Your platform is built to be transparent, defensible, and
+                aligned with UAE digital requirements.
+                <br />
+                We implement privacy controls, consent flows, and clear customer
+                terms, then document it as an evidence pack for your records.
+              </div>
+
+              <Button href="/trust-center" variant="primary">
+                View Trust Pack
+              </Button>
+            </Section>
+          </div>
+
+          <LiquidGlowSweep id="d" />
+
+          <div data-reveal>
+            <Section
+              title="What we deliver"
+              subtitle="Software and workflow engineering, built with governance, proof, and high-end motion design."
+            >
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="glass borderGlow rounded-2xl p-6">
+                  <div className="text-sm font-semibold">
+                    Technology Division
+                  </div>
+                  <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-muted">
+                    <li>Bespoke software development and web applications</li>
+                    <li>Secure customer portals and hosted platforms</li>
+                    <li>
+                      End to end implementation (requirements, project
+                      management, documentation)
+                    </li>
+                    <li>Audit trails and internal governance workflows</li>
+                    <li>
+                      Where required: software code security reviews and
+                      technology audit services relating to software systems
+                    </li>
+                    <li>
+                      Anti money laundering style workflows (KYC, monitoring,
+                      case handling, record keeping)
+                    </li>
+                    <li>
+                      Anti theft and secure operational systems (access control,
+                      approvals, inventory controls)
+                    </li>
+                    <li>
+                      Fraud prevention systems (risk scoring, behaviour
+                      analysis, velocity controls)
+                    </li>
+                    <li>Dispute evidence packs and incident workflows</li>
+                  </ul>
+                </div>
+
+                <div className="glass borderGlow rounded-2xl p-6">
+                  <div className="text-sm font-semibold">
+                    Compliance and Risk Division (in-house)
+                  </div>
+                  <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-muted">
+                    <li>Risk and compliance workflow design</li>
+                    <li>Internal governance and evidence structure</li>
+                    <li>
+                      Documentation and trust packs embedded into system flows
+                    </li>
+                    <li>Audit readiness structure and traceability</li>
+                    <li>
+                      Contracting workflow logic (acceptance, disclosures,
+                      approvals)
+                    </li>
+                  </ul>
+                  <div className="mt-4 text-xs text-muted">
+                    In-house counsel supports governance and documentation
+                    within client engagements.
+                  </div>
+                </div>
+              </div>
+            </Section>
+          </div>
+
+          <CTA />
+
+          {/* CONTACT */}
+          <Section
+            title="Contact"
+            subtitle={`${site.pricingNote}. We work with reputable, branded businesses.`}
+          >
+            <div className="grid gap-6 md:grid-cols-2">
+              <ContactFormBlock />
+
+              <div className="glass borderGlow rounded-2xl p-6">
+                <div className="text-sm font-semibold">Direct</div>
+
+                <div className="mt-3 text-sm text-muted">
+                  Email: <span className="text-text">{site.contactEmail}</span>
+                </div>
+
+                <div className="mt-3 text-sm text-muted">
+                  Number: +97156 87 44 925
+                </div>
+
+                <div className="mt-3 text-sm text-muted">
+                  Focus: luxury automotive, luxury property, hospitals and
+                  medical centers.
+                </div>
+
+                <div className="mt-6 rounded-2xl border border-line bg-bg p-4">
+                  <div className="text-xs font-semibold text-muted">Note</div>
+                  <div className="mt-2 text-xs text-muted">
+                    In-house counsel supports governance and documentation
+                    within client engagements.
+                  </div>
                 </div>
               </div>
             </div>
           </Section>
-        </div>
 
-        <CTA />
-        {/* Contact Form Section (copied from contact page) */}
-        <Section
-          title="Contact"
-          subtitle={`${site.pricingNote}. We work with reputable, branded businesses.`}
-        >
-          <div className="grid gap-6 md:grid-cols-2">
-            <ContactFormBlock />
-            <div className="glass borderGlow rounded-2xl p-6">
-              <div className="text-sm font-semibold">Direct</div>
-              <div className="mt-3 text-sm text-muted">
-                Email: <span className="text-text">{site.contactEmail}</span>
-              </div>
-              <div className="mt-3 text-sm text-muted">
-                Number: +97156 87 44 925
-              </div>
-              <div className="mt-3 text-sm text-muted">
-                Focus: luxury automotive, luxury property, hospitals and medical
-                centers.
-              </div>
-              <div className="mt-6 rounded-2xl border border-line bg-bg p-4">
-                <div className="text-xs font-semibold text-muted">Note</div>
-                <div className="mt-2 text-xs text-muted">
-                  In-house counsel supports governance and documentation within
-                  client engagements.
-                </div>
-              </div>
-            </div>
-          </div>
-        </Section>
-        <div className="py-14" />
-      </Container>
+          <div className="py-14" />
+        </Container>
+      </main>
     </>
   );
 }

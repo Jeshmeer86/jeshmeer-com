@@ -8,39 +8,31 @@ import { Container } from "./Container";
 import { site } from "@/content/site";
 
 const nav = [
-  { href: "/products", label: "Products" },
+  // { href: "/products", label: "Products" }, // Hidden as requested
   { href: "/ai-automation", label: "AI and Automation" },
   { href: "/proof-pack", label: "Proof Pack" },
   { href: "/governance-pack", label: "Governance Pack" },
+  // { href: "/industries", label: "Industries" }, // Hidden by default
   { href: "/how-we-work", label: "How we work" },
-  { href: "/security-assurance", label: "Security and Assurance" },
+  // { href: "/security-assurance", label: "Security and Assurance" }, // Hidden as requested
   { href: "/company", label: "Company structure" },
   { href: "/contact", label: "Contact" },
 ];
-export function Nav() {
-  const [industriesOpen, setIndustriesOpen] = useState(false);
-  const [mobileNavOpen, setMobileNavOpen] = useState(false);
-  const industriesRef = useRef<HTMLDivElement>(null);
 
-  // Close submenu when clicking outside (desktop)
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        industriesRef.current &&
-        !industriesRef.current.contains(event.target as Node)
-      ) {
-        setIndustriesOpen(false);
-      }
-    }
-    if (industriesOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [industriesOpen]);
+// Show industries tab only if showIndustries is true
+export function Nav({
+  showIndustries = false,
+}: { showIndustries?: boolean } = {}) {
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+
+  // Compose nav items, conditionally including Industries
+  const navItems = showIndustries
+    ? [
+        ...nav.slice(0, 4),
+        { href: "/industries", label: "Industries" },
+        ...nav.slice(4),
+      ]
+    : nav;
 
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-bg/25 backdrop-blur">
@@ -72,67 +64,7 @@ export function Nav() {
 
           {/* Desktop nav */}
           <nav className="hidden items-center gap-5 md:flex">
-            {nav.slice(0, 2).map((i) => (
-              <Link
-                key={i.href}
-                href={i.href}
-                className="text-sm text-muted hover:text-platinum"
-                data-magnetic
-              >
-                {i.label}
-              </Link>
-            ))}
-
-            <div className="relative" ref={industriesRef}>
-              <div className="inline-flex items-center">
-                <span
-                  className="text-sm font-semibold text-gold hover:opacity-90 cursor-pointer select-none"
-                  onClick={() => setIndustriesOpen((v) => !v)}
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ")
-                      setIndustriesOpen((v) => !v);
-                  }}
-                  aria-haspopup="true"
-                  aria-expanded={industriesOpen}
-                >
-                  Industries
-                </span>
-                <div className="pointer-events-none ml-2 text-xs text-muted">
-                  ▾
-                </div>
-              </div>
-              <div
-                className={`${industriesOpen ? "visible opacity-100 translate-y-0" : "invisible opacity-0 translate-y-1"} absolute left-0 top-full z-50 mt-3 w-72 rounded-2xl border border-line bg-panel/60 p-2 shadow-soft transition`}
-              >
-                <Link
-                  href="/industries/luxury-automotive"
-                  className="block rounded-xl px-3 py-2 text-sm text-text hover:bg-bg/40"
-                  data-magnetic
-                  onClick={() => setIndustriesOpen(false)}
-                >
-                  Luxury Automotive (Primary)
-                </Link>
-                <Link
-                  href="/industries/luxury-property"
-                  className="block rounded-xl px-3 py-2 text-sm text-text hover:bg-bg/40"
-                  data-magnetic
-                  onClick={() => setIndustriesOpen(false)}
-                >
-                  Luxury Property
-                </Link>
-                <Link
-                  href="/industries/hospitals-medical-centers"
-                  className="block rounded-xl px-3 py-2 text-sm text-text hover:bg-bg/40"
-                  data-magnetic
-                  onClick={() => setIndustriesOpen(false)}
-                >
-                  Hospitals and Medical Centers
-                </Link>
-              </div>
-            </div>
-
-            {nav.slice(2).map((i) =>
+            {navItems.map((i) =>
               i.href === "/contact" ? (
                 <Button key={i.href} href={i.href} variant="secondary">
                   {i.label}
@@ -195,7 +127,7 @@ export function Nav() {
                 />
               </svg>
             </button>
-            {nav.map((i) => (
+            {navItems.map((i) => (
               <Link
                 key={i.href}
                 href={i.href}
@@ -205,30 +137,6 @@ export function Nav() {
                 {i.label}
               </Link>
             ))}
-            <div className="mt-4">
-              <span className="block text-xs text-muted">Industries</span>
-              <Link
-                href="/industries/luxury-automotive"
-                className="block text-sm py-2 px-2 rounded hover:bg-panel/40"
-                onClick={() => setMobileNavOpen(false)}
-              >
-                Luxury Automotive (Primary)
-              </Link>
-              <Link
-                href="/industries/luxury-property"
-                className="block text-sm py-2 px-2 rounded hover:bg-panel/40"
-                onClick={() => setMobileNavOpen(false)}
-              >
-                Luxury Property
-              </Link>
-              <Link
-                href="/industries/hospitals-medical-centers"
-                className="block text-sm py-2 px-2 rounded hover:bg-panel/40"
-                onClick={() => setMobileNavOpen(false)}
-              >
-                Hospitals and Medical Centers
-              </Link>
-            </div>
           </div>
         )}
       </Container>

@@ -5,6 +5,7 @@ import { Nav } from "@/components/Nav";
 import { Preloader } from "@/components/Preloader";
 import { MagneticCursor } from "@/components/MagneticCursor";
 import { Footer } from "@/components/Footer";
+import CookieConsent from "@/components/CookieConsent";
 import { site } from "@/content/site";
 
 const manrope = Manrope({
@@ -43,8 +44,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={manrope.className}>
-      <body>
-        <Preloader />
+      <body suppressHydrationWarning>
         <MagneticCursor />
         <Nav />
         <main>{children}</main>
