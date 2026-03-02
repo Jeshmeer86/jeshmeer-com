@@ -399,8 +399,7 @@ export default function GovernancePackPage() {
         </div>
 
         <div className="mt-10 text-center text-sm text-white/60">
-          You are building the kind of brand that high-end clients trust. This
-          page is part of that authority layer.
+          This page is part of the authority layer.
         </div>
       </section>
     </main>

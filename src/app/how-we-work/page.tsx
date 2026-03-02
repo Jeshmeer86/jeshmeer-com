@@ -1,6 +1,7 @@
 import { Container } from "@/components/Container";
 import { Section } from "@/components/Section";
 import { CTA } from "@/components/CTA";
+import { Card } from "@/components/Card";
 
 const steps = [
   {
@@ -46,21 +47,19 @@ export default function HowWeWorkPage() {
       >
         <div className="grid gap-4 md:grid-cols-2">
           {steps.map((s) => (
-            <div
-              key={s.title}
-              className="glass borderGlow rounded-2xl p-6"
-            >
+            <Card key={s.title}>
               <div className="text-sm font-semibold">{s.title}</div>
               <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-muted">
                 {s.points.map((p) => (
                   <li key={p}>{p}</li>
                 ))}
               </ul>
-            </div>
+            </Card>
           ))}
         </div>
       </Section>
 
+      <div className="my-10 border-t border-line" />
       <CTA />
       <div className="py-10" />
     </Container>

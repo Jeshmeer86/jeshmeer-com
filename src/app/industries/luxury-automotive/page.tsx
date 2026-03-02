@@ -2,6 +2,7 @@ import { Container } from "@/components/Container";
 import Image from "next/image";
 import { Section } from "@/components/Section";
 import { CTA } from "@/components/CTA";
+import { Card } from "@/components/Card";
 
 export default function IndustryPage() {
   return (
@@ -34,7 +35,7 @@ export default function IndustryPage() {
         subtitle="High value vehicle transactions need proof, control, and speed. We build AI and automation driven workflows that protect brand reputation and reduce dispute exposure."
       >
         <div className="grid gap-4 md:grid-cols-2">
-          <div className="glass borderGlow rounded-2xl p-6">
+          <Card>
             <div className="text-sm font-semibold">Use cases</div>
             <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-muted">
               <li>Online reservation and deposit workflows per vehicle</li>
@@ -45,9 +46,8 @@ export default function IndustryPage() {
               </li>
               <li>Evidence packs for disputes and chargebacks</li>
             </ul>
-          </div>
-
-          <div className="glass borderGlow rounded-2xl p-6">
+          </Card>
+          <Card>
             <div className="text-sm font-semibold">
               AI and Automation everywhere
             </div>
@@ -59,8 +59,9 @@ export default function IndustryPage() {
                 routing
               </li>
             </ul>
-          </div>
+          </Card>
         </div>
+        <div className="my-10 border-t border-line" />
       </Section>
 
       <CTA />

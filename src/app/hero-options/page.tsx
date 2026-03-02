@@ -4,6 +4,8 @@ import { site } from "@/content/site";
 import Link from "next/link";
 import Image from "next/image";
 
+import { Card } from "@/components/Card";
+
 const options = [
   {
     key: "loop",
@@ -42,10 +44,7 @@ export default function HeroOptionsPage() {
       >
         <div className="grid gap-4 md:grid-cols-3">
           {options.map((o) => (
-            <div
-              key={o.key}
-              className="glass borderGlow rounded-2xl overflow-hidden"
-            >
+            <Card key={o.key} className="overflow-hidden p-0">
               <div className="relative">
                 <Image
                   src={o.src}
@@ -58,7 +57,7 @@ export default function HeroOptionsPage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-bg/80 via-transparent to-transparent" />
               </div>
               <div className="p-5">
-                <div className="text-sm font-semibold">{o.label}</div>
+                <div className="text-sm font-semibold text-gold">{o.label}</div>
                 <div className="mt-1 text-xs text-muted">Key: {o.key}</div>
                 <div className="mt-4 flex gap-3">
                   <Link
@@ -77,11 +76,12 @@ export default function HeroOptionsPage() {
                   </Link>
                 </div>
               </div>
-            </div>
+            </Card>
           ))}
         </div>
       </Section>
 
+      <div className="my-10 border-t border-line" />
       <div className="py-10" />
     </Container>
   );

@@ -2,6 +2,7 @@ import { Container } from "@/components/Container";
 import Image from "next/image";
 import { Section } from "@/components/Section";
 import { CTA } from "@/components/CTA";
+import { Card } from "@/components/Card";
 
 export default function IndustryPage() {
   return (
@@ -34,7 +35,7 @@ export default function IndustryPage() {
         subtitle="Medical workflows require safety, traceability, and clean governance. We build portals and controlled workflows that reduce staff load and improve patient flow."
       >
         <div className="grid gap-4 md:grid-cols-2">
-          <div className="glass borderGlow rounded-2xl p-6">
+          <Card>
             <div className="text-sm font-semibold">Use cases</div>
             <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-muted">
               <li>
@@ -47,9 +48,8 @@ export default function IndustryPage() {
               <li>Audit trails for key actions, disclosures, and access</li>
               <li>Incident and exception workflows with evidence handling</li>
             </ul>
-          </div>
-
-          <div className="glass borderGlow rounded-2xl p-6">
+          </Card>
+          <Card>
             <div className="text-sm font-semibold">
               AI and Automation everywhere
             </div>
@@ -58,11 +58,13 @@ export default function IndustryPage() {
                 AI assisted intake summarisation and routing to the right team
               </li>
               <li>
-                Automation for reminders, follow ups, and document requests
+                Automation for notifications, status updates, and internal
+                routing
               </li>
-              <li>Workflow prompts to reduce manual rework and errors</li>
+              <li>Risk flags for mismatched details and unusual behaviour</li>
+              <li>Evidence packs for disputes and chargebacks</li>
             </ul>
-          </div>
+          </Card>
         </div>
       </Section>
 

@@ -1,6 +1,7 @@
 import { Container } from "@/components/Container";
 import { Section } from "@/components/Section";
 import { CTA } from "@/components/CTA";
+import { Card } from "@/components/Card";
 
 export default function CompanyPage() {
   return (
@@ -10,7 +11,7 @@ export default function CompanyPage() {
         subtitle="Two internal divisions within one company: Technology, and in-house Compliance and Risk."
       >
         <div className="grid gap-4 md:grid-cols-2">
-          <div className="glass borderGlow rounded-2xl p-6">
+          <Card>
             <div className="text-sm font-semibold">Technology Division</div>
             <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-muted">
               <li>Bespoke software development and web applications</li>
@@ -25,9 +26,8 @@ export default function CompanyPage() {
                 audit services relating to software systems
               </li>
             </ul>
-          </div>
-
-          <div className="glass borderGlow rounded-2xl p-6">
+          </Card>
+          <Card>
             <div className="text-sm font-semibold">
               Compliance and Risk Division (in-house)
             </div>
@@ -41,10 +41,11 @@ export default function CompanyPage() {
               In-house counsel supports governance and documentation within
               client engagements.
             </div>
-          </div>
+          </Card>
         </div>
       </Section>
 
+      <div className="my-10 border-t border-line" />
       <CTA />
       <div className="py-10" />
     </Container>

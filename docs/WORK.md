@@ -1,11 +1,25 @@
--
--
--
--
+## Playbooks
+
+- docs/playbooks/01-Outreach.md
+- docs/playbooks/02-Discovery-Call.md
+- docs/playbooks/03-Proposal-and-SOW.md
+- docs/playbooks/04-Access-and-Security.md
+- docs/playbooks/06-Audit-Trail-Standard.md
+- docs/playbooks/07-Launch-and-Handover.md
+- docs/playbooks/Dealership-Software-Delivery-Playbook.md
+
+## Use map for Playbooks (How to use it)
+
+New lead -> 01-Outreach
+Call booked -> 02-Discovery-Call
+Ready to close -> 03-Proposal-and-SOW
+Project starts -> 04-Access-and-Security
+Building core -> 06-Audit-Trail-Standard
+Going live -> 07-Launch-and-Handover
 
 # WORK
 
-## NOW (today) ( 01 March 2026 )(missile strike in dubai)
+## NOW (today) ( 02 March 2026 )
 
 Goal (1 line):
 
