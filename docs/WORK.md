@@ -19,24 +19,26 @@ Going live -> 07-Launch-and-Handover
 
 # WORK
 
-## NOW (today) ( 02 March 2026 )
+One concrete idea a day to improve your business structure: define a Weekly Deal Target (e.g., “1 proposal sent per week minimum”) and make one of your top 3 daily tasks always contribute directly to hitting that target.
+
+## NOW (today) ( 03 March 2026 )
 
 Goal (1 line):
 
-- Finalize complete website, read through each navigation page.check spelling grammar wording
+- contact atleast 3 dealersships by email
 
 Top 10 tasks (only these):
 
 - [ ] read thru each nav page.
-      Products
       AI and Automation
       Proof Pack
       Governance Pack
-      Industries
+
       How we work
-      Security and Assurance
+
       Company structure
       Contact
+
 - [ ]
 - [ ]
 - [ ]

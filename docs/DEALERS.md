@@ -8,6 +8,8 @@ Legend:
 
 - SENT PROOF PACK
 
+- EMAIL (INNITIAL CONTACT)
+
 - MEETING BOOKED
 
 - PROPOSAL SENT
@@ -16,9 +18,11 @@ Legend:
 
 ## List
 
-- [ ] AGMC BMW - NEW - next action:
-- [ ] Gargash Mercedes - NEW - next action:
-- [ ] VIP Motors - NEW - next action:
+- [ ] Ferrari Dubai (Al Tayer Motors) - NEW - next action:
+- [ ] Ultimate Motors LLC (Lamborghini Dubai) - NEW - next action:
+- [ ] Rolls-Royce Motor Cars Dubai (AGMC) - NEW - next action:
+- [ ] Bugatti UAE (Al Habtoor Motors partner page) - NEW - next action:
+- [ ] McLaren Dubai (Performance Tuning LLC, Al Nabooda group) - NEW - next action:
 
 Official and big groups (high authority targets)
 
