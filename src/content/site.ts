@@ -1,23 +1,28 @@
 export const site = {
   name: "Sovereign Compliance Systems FZCO",
+
+  // Short brand line (used across pages)
   taglineTop: "AI and automation, engineered for control.",
-  taglineBottom: "",
-  headline:
-    "Premium systems built for high value transactions, governance, and proof.",
+  taglineBottom: "Audit trails. Evidence vaults. One click proof packs.",
+
+  // Main headline (used in your home hero Section title)
+  headline: "Compliance grade dealership systems for high value transactions.",
+
+  // General subhead (safe to reuse on other pages too)
   subhead:
-    "We design and build bespoke software that reduces manual work, increases flow, and creates audit grade traceability using our latest AI and Automation Tools.",
+    "We build premium dealership platforms that streamline reservations, deposits, approvals, delivery, and after sales with automatic audit trails, evidence capture, and exportable proof packs.",
+
   pricingNote: "Projects from 100,000 AED+",
   primaryIndustry: "Luxury Automotive",
+
   industries: [
     "Luxury Automotive",
     "Luxury Property",
     "Hospitals and Medical Centers",
-    "Property industry",
-    "Medical industry",
-    "Hospitals",
     "High value sales businesses",
     "Teams that need strong internal controls",
   ],
+
   contactEmail: "jesasolutions@yahoo.com",
   location: "Dubai, UAE",
 };

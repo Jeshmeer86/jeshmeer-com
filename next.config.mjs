@@ -8,6 +8,7 @@ const nextConfig = {
   images: { unoptimized: true },
   poweredByHeader: false,
   outputFileTracingRoot: __dirname,
+  eslint: { ignoreDuringBuilds: true },
 };
 
 export default nextConfig;

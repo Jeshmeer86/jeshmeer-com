@@ -16,8 +16,9 @@ Legend:
 
 - CLOSED
 
-## List
+## List Dealers
 
+- [ ]
 - [ ] Ferrari Dubai (Al Tayer Motors) - NEW - next action:
 - [ ] Ultimate Motors LLC (Lamborghini Dubai) - NEW - next action:
 - [ ] Rolls-Royce Motor Cars Dubai (AGMC) - NEW - next action:
@@ -36,17 +37,16 @@ Al-Futtaim Motors Toyota locations
 
 Lexus (Al-Futtaim)
 
+## List Non Dealers i.e: Used Cars
+
+- [ ] F1rst Motors - NEW - next action:
+- [ ] VIP Motors - NEW - next action:
+- [ ] Exotic Cars - NEW - next action:
+- [ ] Princess cars - NEW - next action:
+- [ ] People of faith cars - NEW - next action:
+- [ ]
+
 Al-Futtaim Automall (certified used)
-
-Luxury showrooms (perfect match for your premium positioning)
-
-VIP Motors
-
-F1rst Motors
-
-Exotic Cars
-
-Signature Cars (used dealer list source mentions ALBA Cars, CarSwitch, Expat Motors, The Elite Cars, etc.)
 
 Ras Al Khor / Al Aweer targets (volume, lots of decision makers)
 

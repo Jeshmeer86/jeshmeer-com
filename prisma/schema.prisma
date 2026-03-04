@@ -1,0 +1,161 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// prisma/schema.prisma
+
+model Org {
+  id        String   @id @default(cuid())
+  type      OrgType
+  name      String
+  createdAt DateTime @default(now())
+  users     UserOrg[]
+  deals     Deal[]
+  partners  PartnerLink[] @relation("DealerPartnerLinks")
+}
+
+enum OrgType {
+  DEALER
+  PARTNER
+  INTERNAL
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  orgs      UserOrg[]
+}
+
+model UserOrg {
+  id        String   @id @default(cuid())
+  userId    String
+  orgId     String
+  role      Role
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  org  Org  @relation(fields: [orgId], references: [id])
+
+  @@unique([userId, orgId])
+}
+
+enum Role {
+  OWNER
+  GM
+  SALES_MANAGER
+  SALES
+  FINANCE
+  COMPLIANCE
+  READ_ONLY
+}
+
+model Deal {
+  id          String   @id @default(cuid())
+  orgId       String
+  dealNumber  String
+  status      DealStatus @default(DRAFT)
+  customerRef String?
+  vehicleRef  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  org         Org      @relation(fields: [orgId], references: [id])
+  events      DealEvent[]
+  deposits    Deposit[]
+  evidence    EvidenceFile[]
+  exports     ExportBundle[]
+}
+
+enum DealStatus {
+  DRAFT
+  RESERVED
+  DEPOSIT_RECEIVED
+  IN_FINANCE
+  READY_FOR_TRANSFER
+  DELIVERED
+  CANCELLED
+}
+
+model DealEvent {
+  id        String   @id @default(cuid())
+  dealId    String
+  actorId   String?
+  type      String
+  message   String?
+  payload   Json?
+  ip        String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  deal  Deal @relation(fields: [dealId], references: [id])
+}
+
+model Deposit {
+  id         String   @id @default(cuid())
+  dealId     String
+  amount     Int
+  currency   String   @default("AED")
+  receiptId  String   @unique
+  status     DepositStatus @default(RECEIVED)
+  createdAt  DateTime @default(now())
+
+  deal Deal @relation(fields: [dealId], references: [id])
+}
+
+enum DepositStatus {
+  RECEIVED
+  REFUNDED
+  CANCELLED
+}
+
+model EvidenceFile {
+  id          String   @id @default(cuid())
+  dealId      String
+  uploadedBy  String?
+  filename    String
+  mimeType    String
+  storageKey  String
+  sha256      String
+  redacted    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  deal Deal @relation(fields: [dealId], references: [id])
+}
+
+model ExportBundle {
+  id         String   @id @default(cuid())
+  dealId     String
+  createdBy  String?
+  storageKey String
+  sha256     String
+  createdAt  DateTime @default(now())
+
+  deal Deal @relation(fields: [dealId], references: [id])
+}
+
+model PartnerLink {
+  id            String   @id @default(cuid())
+  partnerOrgId  String
+  dealerOrgId   String
+  code          String   @unique
+  createdAt     DateTime @default(now())
+
+  partnerOrg Org @relation("PartnerOrgLinks", fields: [partnerOrgId], references: [id])
+  dealerOrg  Org @relation("DealerPartnerLinks", fields: [dealerOrgId], references: [id])
+
+  @@index([partnerOrgId])
+  @@index([dealerOrgId])
+}

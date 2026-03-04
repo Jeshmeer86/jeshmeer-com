@@ -6,6 +6,7 @@ import { CTA } from "@/components/CTA";
 import { Badge } from "@/components/Badge";
 import { products } from "@/content/products";
 import { site } from "@/content/site";
+import { Card } from "@/components/Card";
 
 export function generateStaticParams() {
   return products.map((p) => ({ slug: p.slug }));
@@ -134,124 +135,251 @@ function FlagshipStory() {
       </Section>
 
       <Section
-        title="Screenshots style layout"
-        subtitle="A visual sense of the platform modules. These are layout previews, not final UI."
+        title="Platform preview"
+        subtitle="A real world preview of how the platform reduces staff steps, captures proof, and exports evidence on demand."
       >
-        <div className="glass borderGlow rounded-2xl overflow-hidden mb-6">
-          <div className="relative">
-            <Image
-              src="/mockups/vault-dashboard-mockup.jpg"
-              alt="Sovereign Vault AI Platform mockup"
-              width={1200}
-              height={600}
-              className="w-full object-cover"
-              priority
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-bg/70 via-transparent to-transparent" />
-          </div>
-          <div className="p-5 text-xs text-muted">
-            Luxury mockup preview for the flagship platform dashboard. Final UI
-            is bespoke per client.
-          </div>
-        </div>
-
-        <div className="grid gap-4 md:grid-cols-2 mb-6">
-          <div className="glass borderGlow rounded-2xl overflow-hidden">
-            <div className="relative">
-              <Image
-                src="/mockups/case-queue-mockup.jpg"
-                alt="Flagship case queue mockup"
-                width={1200}
-                height={600}
-                className="w-full object-cover"
-                priority
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-bg/70 via-transparent to-transparent" />
+        <div className="grid gap-6 md:grid-cols-2">
+          {/* 1 */}
+          <Card>
+            <div className="kicker mb-2 text-xs font-semibold tracking-widest text-gold">
+              RESERVATION AND DEPOSIT FLOW
             </div>
-            <div className="p-5 text-xs text-muted">
-              Case queue mockup for flagged events and approvals.
+            <div className="mb-2 text-lg font-semibold text-white">
+              One deal timeline, no chasing
             </div>
-          </div>
-
-          <div className="glass borderGlow rounded-2xl overflow-hidden">
-            <div className="relative">
-              <Image
-                src="/mockups/metrics-mockup.jpg"
-                alt="Flagship metrics mockup"
-                width={1200}
-                height={600}
-                className="w-full object-cover"
-                priority
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-bg/70 via-transparent to-transparent" />
+            <div className="mb-4 text-sm text-muted">
+              Deposits, terms acceptance, and status changes are recorded
+              automatically with timestamps.
             </div>
-            <div className="p-5 text-xs text-muted">
-              Monitoring and performance metrics mockup for controls.
+
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+              <div className="mb-3 flex items-center justify-between text-xs text-muted">
+                <span>Deal ID</span>
+                <span className="text-text font-semibold">SV-10482</span>
+              </div>
+
+              <ul className="space-y-3">
+                {[
+                  ["Reservation link sent", "Tracked link delivery"],
+                  ["Terms accepted", "Consent and disclosure captured"],
+                  ["Deposit received", "Receipt and reference saved"],
+                  ["Hold expires", "Auto release unless extended"],
+                ].map(([a, b], i) => (
+                  <li key={i} className="flex gap-3">
+                    <span className="mt-1 h-2 w-2 rounded-full bg-gold" />
+                    <div>
+                      <div className="text-sm font-semibold text-white">
+                        {a}
+                      </div>
+                      <div className="text-xs text-muted">{b}</div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
             </div>
-          </div>
-        </div>
+          </Card>
 
-        <div className="grid gap-4 md:grid-cols-2">
-          <ScreenshotFrame
-            title="Reservation and Deposit Flow"
-            caption="Hold rules, deposit logic, disclosures, receipts, and status timeline."
-          />
-          <ScreenshotFrame
-            title="Admin Approvals Console"
-            caption="Approvals, overrides, thresholds, and exception handling with full traceability."
-          />
-          <ScreenshotFrame
-            title="Fraud Controls and Monitoring"
-            caption="Risk scoring, velocity rules, identity resolution, monitoring, and alerts."
-          />
-          <ScreenshotFrame
-            title="Evidence Vault Export"
-            caption="Transaction history, acceptances, communications, and receipts packaged for disputes."
-          />
-          <ScreenshotFrame
-            title="Case Management Queue"
-            caption="Review, decision, notes, and evidence for flagged events."
-          />
-          <ScreenshotFrame
-            title="Automation and Integrations"
-            caption="Webhooks, notifications, routing, and system to system integration points."
-          />
-        </div>
-      </Section>
+          {/* 2 */}
+          <Card>
+            <div className="kicker mb-2 text-xs font-semibold tracking-widest text-gold">
+              APPROVALS CONSOLE
+            </div>
+            <div className="mb-2 text-lg font-semibold text-white">
+              Approvals with reason notes and change logs
+            </div>
+            <div className="mb-4 text-sm text-muted">
+              Staff request. Managers approve. The system records what changed,
+              who approved, and why.
+            </div>
 
-      <Section
-        title="Core modules"
-        subtitle="The platform is built from modules. You can deploy all at once or phase it."
-      >
-        <div className="grid gap-4 md:grid-cols-2">
-          <div className="glass borderGlow rounded-2xl p-6">
-            <div className="text-sm font-semibold">Transaction layer</div>
-            <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-muted">
-              <li>Reservation workflow (hold, confirm, expire, release)</li>
-              <li>
-                Deposit logic (refundable vs non refundable, timing windows,
-                disclosures)
-              </li>
-              <li>Customer portal (status, receipts, documents, next steps)</li>
-              <li>Admin tools (approvals, overrides, exception notes)</li>
-            </ul>
-          </div>
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+              <div className="mb-3 grid grid-cols-4 gap-2 text-[11px] text-muted">
+                <div>Request</div>
+                <div>Status</div>
+                <div>Owner</div>
+                <div>Proof</div>
+              </div>
 
-          <div className="glass borderGlow rounded-2xl p-6">
-            <div className="text-sm font-semibold">Controls and proof</div>
-            <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-muted">
-              <li>Audit trail and version history</li>
-              <li>Evidence pack export for disputes</li>
-              <li>
-                Fraud controls layer (risk scoring, velocity, identity
-                resolution)
-              </li>
-              <li>
-                Optional AML workflow suite (KYC style onboarding, monitoring,
-                case handling)
-              </li>
-            </ul>
-          </div>
+              <div className="space-y-2">
+                {[
+                  ["Discount", "Pending", "Manager", "Log"],
+                  ["Refund", "Approved", "Manager", "Receipt"],
+                  ["Override", "Denied", "Lead", "Note"],
+                ].map(([a, b, c, d], i) => (
+                  <div
+                    key={i}
+                    className="grid grid-cols-4 gap-2 rounded-xl border border-white/10 bg-black/30 p-3 text-xs"
+                  >
+                    <div className="text-white">{a}</div>
+                    <div className="text-muted">{b}</div>
+                    <div className="text-muted">{c}</div>
+                    <div className="text-gold">{d}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Card>
+
+          {/* 3 */}
+          <Card>
+            <div className="kicker mb-2 text-xs font-semibold tracking-widest text-gold">
+              CASE MANAGEMENT QUEUE
+            </div>
+            <div className="mb-2 text-lg font-semibold text-white">
+              Flagged events and exceptions in one inbox
+            </div>
+            <div className="mb-4 text-sm text-muted">
+              Every exception becomes a tracked case with notes and linked
+              evidence.
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+              <div className="mb-2 flex items-center justify-between text-xs text-muted">
+                <span>Queue</span>
+                <span>Live</span>
+              </div>
+
+              <div className="space-y-3">
+                {[
+                  ["Refund request", "Needs manager approval", "High"],
+                  ["Deposit mismatch", "Payer name mismatch", "High"],
+                  ["Discount override", "Reason note missing", "Medium"],
+                  ["Hold extension", "Rule exception", "Low"],
+                ].map(([a, b, c], i) => (
+                  <div
+                    key={i}
+                    className="flex items-start justify-between gap-4"
+                  >
+                    <div>
+                      <div className="text-sm font-semibold text-white">
+                        {a}
+                      </div>
+                      <div className="text-xs text-muted">{b}</div>
+                    </div>
+                    <span className="rounded-full border border-white/10 bg-black/30 px-2 py-1 text-[11px] text-muted">
+                      {c}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Card>
+
+          {/* 4 */}
+          <Card>
+            <div className="kicker mb-2 text-xs font-semibold tracking-widest text-gold">
+              FRAUD CONTROLS AND MONITORING
+            </div>
+            <div className="mb-2 text-lg font-semibold text-white">
+              Less manual review, more controlled decisions
+            </div>
+            <div className="mb-4 text-sm text-muted">
+              Velocity limits, risk scoring, and identity checks reduce fraud
+              while protecting conversion.
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+              <div className="mb-2 text-xs text-muted">Active rules</div>
+
+              <div className="space-y-2">
+                {[
+                  ["Velocity limit", "5 attempts per 10 minutes", "On"],
+                  ["Step up verification", "Risk score 70+", "On"],
+                  ["Device repeat", "Known device flagged", "On"],
+                ].map(([a, b, c], i) => (
+                  <div
+                    key={i}
+                    className="flex items-center justify-between rounded-xl border border-white/10 bg-black/30 p-3"
+                  >
+                    <div>
+                      <div className="text-sm font-semibold text-white">
+                        {a}
+                      </div>
+                      <div className="text-xs text-muted">{b}</div>
+                    </div>
+                    <span className="rounded-full border border-white/10 bg-black/40 px-2 py-1 text-[11px] text-muted">
+                      {c}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Card>
+
+          {/* 5 */}
+          <Card>
+            <div className="kicker mb-2 text-xs font-semibold tracking-widest text-gold">
+              EVIDENCE VAULT EXPORT
+            </div>
+            <div className="mb-2 text-lg font-semibold text-white">
+              One click proof pack export
+            </div>
+            <div className="mb-4 text-sm text-muted">
+              Exports include the deal timeline, receipts, acceptances,
+              approvals, and attached evidence.
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+              <div className="mb-2 flex items-center justify-between text-xs text-muted">
+                <span>Export pack</span>
+                <span>ZIP + PDF</span>
+              </div>
+
+              <div className="space-y-2">
+                {[
+                  ["timeline.pdf", "Deal summary and events"],
+                  ["receipts.pdf", "Deposit receipts"],
+                  ["acceptance.json", "Terms acceptance record"],
+                  ["attachments/", "Photos and documents"],
+                ].map(([a, b], i) => (
+                  <div
+                    key={i}
+                    className="flex items-center justify-between rounded-xl border border-white/10 bg-black/30 p-3"
+                  >
+                    <div className="text-sm font-semibold text-white">{a}</div>
+                    <div className="text-xs text-muted">{b}</div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-3 rounded-xl border border-white/10 bg-black/30 p-3 text-xs text-muted">
+                Manifest and hashes included for integrity.
+              </div>
+            </div>
+          </Card>
+
+          {/* 6 */}
+          <Card>
+            <div className="kicker mb-2 text-xs font-semibold tracking-widest text-gold">
+              AUTOMATION AND INTEGRATIONS
+            </div>
+            <div className="mb-2 text-lg font-semibold text-white">
+              Notifications, routing, and system hooks
+            </div>
+            <div className="mb-4 text-sm text-muted">
+              Webhooks and automations reduce staff follow ups and keep every
+              step tracked.
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+              <div className="space-y-2">
+                {[
+                  ["Deposit received", "Notify sales and finance"],
+                  ["Approval required", "Create manager task"],
+                  ["Hold expiring", "Auto remind or auto release"],
+                  ["Export requested", "Generate proof pack"],
+                ].map(([a, b], i) => (
+                  <div
+                    key={i}
+                    className="rounded-xl border border-white/10 bg-black/30 p-3"
+                  >
+                    <div className="text-sm font-semibold text-white">{a}</div>
+                    <div className="text-xs text-muted">{b}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Card>
         </div>
       </Section>
     </>
