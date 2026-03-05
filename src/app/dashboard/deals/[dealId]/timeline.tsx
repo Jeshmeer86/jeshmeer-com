@@ -14,17 +14,17 @@ export default function DealTimeline({ dealId }: { dealId: string }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function fetchEvents() {
+  const fetchEvents = React.useCallback(async () => {
     const res = await fetch(`/api/deals/${dealId}/events`);
     if (res.ok) {
       const data = await res.json();
       setEvents(data.events || []);
     }
-  }
+  }, [dealId]);
 
   useEffect(() => {
     fetchEvents();
-  }, [dealId]);
+  }, [fetchEvents]);
 
   async function handleAddNote(e: React.FormEvent) {
     e.preventDefault();

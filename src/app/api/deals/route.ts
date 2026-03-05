@@ -1,20 +1,16 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
+import { requireDashboardContext } from "@/lib/tenant";
 
 export async function GET() {
-  const { userId, orgId } = await auth();
+  const ctx = await requireDashboardContext();
+  if (!ctx.ok)
+    return NextResponse.json({ error: ctx.reason === "SIGN_IN" ? "Unauthorized" : "Organization required" }, { status: ctx.reason === "SIGN_IN" ? 401 : 400 });
 
-  if (!userId)
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  if (!orgId)
-    return NextResponse.json(
-      { error: "Organization required" },
-      { status: 400 },
-    );
 
   const deals = await prisma.deal.findMany({
-    where: { orgId },
+    where: { orgId: ctx.dbOrgId },
     orderBy: { createdAt: "desc" },
     take: 100,
   });
@@ -23,15 +19,10 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const { userId, orgId } = await auth();
+  const ctx = await requireDashboardContext();
+  if (!ctx.ok)
+    return NextResponse.json({ error: ctx.reason === "SIGN_IN" ? "Unauthorized" : "Organization required" }, { status: ctx.reason === "SIGN_IN" ? 401 : 400 });
 
-  if (!userId)
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  if (!orgId)
-    return NextResponse.json(
-      { error: "Organization required" },
-      { status: 400 },
-    );
 
   const body = (await req.json().catch(() => null)) as {
     dealNumber?: string;
@@ -44,7 +35,7 @@ export async function POST(req: Request) {
 
   try {
     const deal = await prisma.deal.create({
-      data: { dealNumber, orgId },
+      data: { dealNumber, orgId: ctx.dbOrgId },
     });
 
     return NextResponse.json({ deal }, { status: 201 });
