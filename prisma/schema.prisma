@@ -1,28 +1,26 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
-
+//
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
-generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
-}
-
-datasource db {
-  provider = "postgresql"
-}
-
-// prisma/schema.prisma
-
 model Org {
-  id        String   @id @default(cuid())
-  type      OrgType
-  name      String
+  partnerOrgLinks    PartnerLink[] @relation("PartnerOrgLinks")
+  dealerPartnerLinks PartnerLink[] @relation("DealerPartnerLinks")
+
+  id         String  @id @default(cuid())
+  type       OrgType
+  name       String
+  clerkOrgId String? @unique
+
   createdAt DateTime @default(now())
-  users     UserOrg[]
-  deals     Deal[]
-  partners  PartnerLink[] @relation("DealerPartnerLinks")
+  updatedAt DateTime @updatedAt
+
+  users        UserOrg[]
+  deals        Deal[]
+  subscription OrgSubscription?
+
+  @@index([type])
 }
 
 enum OrgType {
@@ -32,24 +30,32 @@ enum OrgType {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
+  id          String  @id @default(cuid())
+  email       String  @unique
+  name        String?
+  clerkUserId String? @unique
+
   createdAt DateTime @default(now())
-  orgs      UserOrg[]
+  updatedAt DateTime @updatedAt
+
+  orgs UserOrg[]
 }
 
 model UserOrg {
-  id        String   @id @default(cuid())
-  userId    String
-  orgId     String
-  role      Role
+  id     String @id @default(cuid())
+  userId String
+  orgId  String
+  role   Role
+
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id])
   org  Org  @relation(fields: [orgId], references: [id])
 
   @@unique([userId, orgId])
+  @@index([orgId])
+  @@index([userId])
 }
 
 enum Role {
@@ -63,20 +69,25 @@ enum Role {
 }
 
 model Deal {
-  id          String   @id @default(cuid())
+  id          String     @id @default(cuid())
   orgId       String
   dealNumber  String
   status      DealStatus @default(DRAFT)
   customerRef String?
   vehicleRef  String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
 
-  org         Org      @relation(fields: [orgId], references: [id])
-  events      DealEvent[]
-  deposits    Deposit[]
-  evidence    EvidenceFile[]
-  exports     ExportBundle[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  org      Org            @relation(fields: [orgId], references: [id])
+  events   DealEvent[]
+  deposits Deposit[]
+  evidence EvidenceFile[]
+  exports  ExportBundle[]
+
+  @@unique([orgId, dealNumber])
+  @@index([orgId, createdAt])
+  @@index([orgId, status])
 }
 
 enum DealStatus {
@@ -90,29 +101,31 @@ enum DealStatus {
 }
 
 model DealEvent {
-  id        String   @id @default(cuid())
-  dealId    String
-  actorId   String?
-  type      String
-  message   String?
-  payload   Json?
-  ip        String?
-  userAgent String?
-  createdAt DateTime @default(now())
+  id             String   @id @default(cuid())
+  dealId         String
+  organizationId String
+  type           String
+  message        String?
+  createdAt      DateTime @default(now())
 
-  deal  Deal @relation(fields: [dealId], references: [id])
+  deal Deal @relation(fields: [dealId], references: [id])
+
+  @@index([dealId, createdAt])
+  @@index([organizationId, createdAt])
 }
 
 model Deposit {
-  id         String   @id @default(cuid())
-  dealId     String
-  amount     Int
-  currency   String   @default("AED")
-  receiptId  String   @unique
-  status     DepositStatus @default(RECEIVED)
-  createdAt  DateTime @default(now())
+  id        String        @id @default(cuid())
+  dealId    String
+  amount    Int
+  currency  String        @default("AED")
+  receiptId String        @unique
+  status    DepositStatus @default(RECEIVED)
+  createdAt DateTime      @default(now())
 
   deal Deal @relation(fields: [dealId], references: [id])
+
+  @@index([dealId, createdAt])
 }
 
 enum DepositStatus {
@@ -122,17 +135,20 @@ enum DepositStatus {
 }
 
 model EvidenceFile {
-  id          String   @id @default(cuid())
-  dealId      String
-  uploadedBy  String?
-  filename    String
-  mimeType    String
-  storageKey  String
-  sha256      String
-  redacted    Boolean  @default(false)
-  createdAt   DateTime @default(now())
+  id         String   @id @default(cuid())
+  dealId     String
+  uploadedBy String?
+  filename   String
+  mimeType   String
+  storageKey String
+  sha256     String
+  redacted   Boolean  @default(false)
+  createdAt  DateTime @default(now())
 
   deal Deal @relation(fields: [dealId], references: [id])
+
+  @@unique([dealId, storageKey])
+  @@index([dealId, createdAt])
 }
 
 model ExportBundle {
@@ -144,18 +160,65 @@ model ExportBundle {
   createdAt  DateTime @default(now())
 
   deal Deal @relation(fields: [dealId], references: [id])
+
+  @@unique([dealId, storageKey])
+  @@index([dealId, createdAt])
 }
 
 model PartnerLink {
-  id            String   @id @default(cuid())
-  partnerOrgId  String
-  dealerOrgId   String
-  code          String   @unique
-  createdAt     DateTime @default(now())
+  id           String   @id @default(cuid())
+  partnerOrgId String
+  dealerOrgId  String
+  code         String   @unique
+  createdAt    DateTime @default(now())
 
   partnerOrg Org @relation("PartnerOrgLinks", fields: [partnerOrgId], references: [id])
   dealerOrg  Org @relation("DealerPartnerLinks", fields: [dealerOrgId], references: [id])
 
   @@index([partnerOrgId])
   @@index([dealerOrgId])
+}
+
+enum Plan {
+  FREE
+  PRO
+  ELITE
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  TRIALING
+  PAST_DUE
+  CANCELED
+  INCOMPLETE
+}
+
+model OrgSubscription {
+  id    String @id @default(cuid())
+  orgId String @unique
+
+  plan   Plan               @default(FREE)
+  status SubscriptionStatus @default(ACTIVE)
+
+  provider               String? @default("stripe")
+  providerCustomerId     String?
+  providerSubscriptionId String?
+
+  currentPeriodStart DateTime?
+  currentPeriodEnd   DateTime?
+  cancelAtPeriodEnd  Boolean   @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  org Org @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([plan])
+  @@index([status])
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
