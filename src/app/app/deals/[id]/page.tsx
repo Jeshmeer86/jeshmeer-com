@@ -2,11 +2,14 @@ import { prisma } from "@/lib/prisma";
 import { requireDealerContext } from "@/lib/tenant";
 import { notFound } from "next/navigation";
 
-export default async function DealPage({ params }: { params: { id: string } }) {
+type Props = { params: Promise<{ id: string }> };
+
+export default async function DealPage({ params }: Props) {
+  const { id } = await params;
   const { dbOrg } = await requireDealerContext();
 
   const deal = await prisma.deal.findFirst({
-    where: { id: params.id, orgId: dbOrg.id },
+    where: { id, orgId: dbOrg.id },
     include: { events: { orderBy: { createdAt: "desc" }, take: 100 } },
   });
 
@@ -46,9 +49,10 @@ export default async function DealPage({ params }: { params: { id: string } }) {
                       {e.type}
                     </div>
                     <div className="text-xs text-muted">
-                      {new Date(e.createdAt).toLocaleString()}
+                      {e.createdAt.toLocaleString()}
                     </div>
                   </div>
+
                   {e.message ? (
                     <div className="mt-2 text-sm text-muted">{e.message}</div>
                   ) : null}

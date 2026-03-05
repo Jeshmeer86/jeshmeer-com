@@ -92,12 +92,16 @@ export default function DealsPage() {
               className="grid grid-cols-4 gap-2 p-3 text-sm border-b"
             >
               <div>
-                <Link className="underline" href={`/dashboard/deals/${d.id}`}>{d.dealNumber}</Link>
+                <Link className="underline" href={`/dashboard/deals/${d.id}`}>
+                  {d.dealNumber}
+                </Link>
               </div>
               <div>{d.status}</div>
               <div>{new Date(d.createdAt).toLocaleString()}</div>
               <div>
-                <Link className="underline" href={`/dashboard/deals/${d.id}`}>Open</Link>
+                <Link className="underline" href={`/dashboard/deals/${d.id}`}>
+                  Open
+                </Link>
               </div>
             </div>
           ))

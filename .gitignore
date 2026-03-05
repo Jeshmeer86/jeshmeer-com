@@ -17,3 +17,6 @@ pnpm-debug.log*
 .env*.local
 
 /src/generated/prisma
+
+# clerk configuration (can include secrets)
+/.clerk/

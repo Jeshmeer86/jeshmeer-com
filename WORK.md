@@ -1,134 +1,179 @@
--
--
--
--
-
 # WORK
 
-## NOW (today) ( 01 March 2026 )(missile strike in dubai)
+## NOW
 
-Goal (1 line):
+- Build gates green (lint, types, build)
+- Tenant context stable (Clerk orgId -> dbOrg)
+- RBAC skeleton in place
 
-- Finalize complete website, read through each navigation page.check spelling grammar wording
+## NEXT
 
-Top 10 tasks (only these):
+- OrgMember table + role mapping
+- Evidence vault metadata model
+- Upload pipeline skeleton (signed upload, metadata insert)
 
-- [ ] read thru each nav page.
-      Products
-      AI and Automation
-      Proof Pack
-      Governance Pack
-      Industries
-      How we work
-      Security and Assurance
-      Company structure
-      Contact
-- [ ]
-- [ ]
-- [ ]
-- [ ]
-- [ ]
-- [ ]
-- [ ]
-- [ ]
-- [ ] Contact form: resend integration working end to end (submit -> email received)(sample)
+## LATER
 
-Definition of done (keep it strict):
+- Proof pack export bundling
+- Partner distribution flows
 
-- [ ]
-- [ ]
-- [ ] Copy is premium and consistent(sample)
-- [ ] Deployed (if needed)(sample)
+## Blockers
 
-## NEXT (after NOW is empty)
+- (none)
 
-- [ ]
+## Decisions
 
-- [ ] Add sparkle glow transitions (subtle)(sample)
-- [ ] Add Proof Pack download flow (PDF later)(sample)
+- Repo lives outside OneDrive
+- Clerk orgId is source of tenant scoping
+  .....................................
 
-## LATER (parking lot)
+What still needs to be done to be a real SaaS (live and selling 3 packages)
 
-- [ ]
-- [ ] n8n automation for leads(sample)
-- [ ] Client portal v0 wireframe(sample)
+Think of SaaS like a hotel:
 
----
+Website = the lobby
 
-## BLOCKERS
+App = the rooms
 
-- what do we show the clients? all the website pages or just Products Page and Proof Pack page?
+Database = the keys and guest records
 
-- I still need to understand the company products that im selling to dealerships.
+Billing = the front desk payments
 
-- I dont have money for company registration so ask chatgpt to check in chat history for the wording of how to tell clients that they must pay money first.
+Multi-tenant isolation = making sure guests can only enter their own rooms
 
-- chatgpt says only have 5 pages instead of 9
+Right now you mostly have the lobby, and some early “room” plumbing. Here is what’s missing.
 
-## NOTES (keep short)
+1. Production database and migrations (Prisma completion)
 
-- Keep sections short, high authority, no long paragraphs
+You need:
 
-- Remember: AI everywhere + Automation everywhere stays consistent
+A real hosted DB (Postgres is the easiest with Prisma).
 
-## DECISIONS (log it once, stop re-deciding)
+A schema.prisma that matches your SaaS model.
 
-- 2026-02-26: Button style = gold glow, rounded-xl, consistent on all pages(sample)
+Migrations applied automatically in production (prisma migrate deploy).
 
-*
-*
-*
-*
-*
-*
-*
-* how your day looks with it
+Minimum tables for your dealership SaaS:
 
-morning (2 minutes)
+Tenant (Dealership)
 
-write the Goal
+User (linked to Clerk user id)
 
-pick only 3 tasks
+Membership / Role (Owner, Manager, Sales, Auditor)
 
-start coding immediately
+Reservation / Deal
 
-during the day
+AuditEvent (append-only log)
 
-when you complete something, tick it like this:
+EvidenceFile (uploads)
 
-- [x] Footer: add links to Privacy, Cookies, Terms pages
+Subscription (plan, status, renewal)
 
-if something blocks you
+2.2) Multi-tenant app area (not just marketing pages)
 
-you write it under BLOCKERS in 1 line
+Status: NOT DONE yet (this is the real next milestone)
 
-then you continue with another NOW task
+You still need an authenticated app area:
 
-end of day (3 minutes)
+/dashboard (minimum)
 
-tick what you shipped
+Clerk protected routes
 
-write 1 to 2 lines in NOTES
+A tenant context (which Org the user is in)
 
-write 1 DECISION that prevents you re-deciding tomorrow
+Hard tenant isolation in every Prisma query (always include orgId)
 
-example end of day result
+Minimum “SaaS app shell” you should build next:
 
-Top 3 tasks (only these):
+/dashboard landing
 
-- [x] Proof Pack page: finish sections (Hero, Proof tiles, CTA)
-- [x] Footer: add links to Privacy, Cookies, Terms pages
-- [ ] Contact form: resend integration working end to end (submit -> email received)
+Deals list
 
-## BLOCKERS
+Single deal view
 
-- Resend DNS records not verified yet, will recheck tomorrow
+Timeline (DealEvent)
 
-## DECISIONS
+Export button (uses OrgSubscription gating)
 
-- 2026-02-26: CTA copy = "Request the Proof Pack" (use everywhere)
+3. Billing and plan gating (3 packages, first free)
 
-that is the whole system
-no apps
-no dashboards
-just forward motion
+Status: PARTIAL
+
+Done:
+
+Plan table exists (OrgSubscription)
+
+Gate helper exists (src/lib/plan.ts)
+
+Not done yet:
+
+Pricing page wired to real checkout
+
+Checkout flow (Stripe or Paddle)
+
+Webhooks to update OrgSubscription
+
+Gates actually enforced in routes or server actions that touch deals, exports, evidence
+
+Next step here is not Stripe yet.
+Next is to enforce FREE vs PRO vs ELITE on one real feature first.
+
+Best first gate:
+
+Evidence export (FREE blocked)
+
+4. File storage for evidence packs
+
+Status: NOT DONE (DB ready, storage layer not)
+
+You have the DB records:
+
+EvidenceFile.storageKey
+
+ExportBundle.storageKey
+
+You still need:
+
+Storage provider (S3 compatible, Cloudflare R2 is great, AWS S3 also fine)
+
+Signed upload endpoint
+
+Signed download endpoint
+
+File type and size validation
+
+5. Operational readiness
+
+Status: NOT DONE
+
+Minimum to add before you onboard a paying client:
+
+Error tracking (Sentry)
+
+Rate limiting on API routes (especially uploads, exports, auth callbacks)
+
+Input validation (zod) on every write
+
+Logging for key events (deal created, deposit recorded, export generated)
+
+Vercel env vars locked down (DATABASE_URL)
+
+DB backups (Neon has built-in features, still define your backup habit)
+
+Save export record to DB
+
+Gate exports by plan
+
+Pricing page + checkout
+
+Free plan signup starts instantly
+
+Paid plan routes to checkout
+
+Production hardening
+
+rate limiting
+
+input validation (zod)
+
+logging

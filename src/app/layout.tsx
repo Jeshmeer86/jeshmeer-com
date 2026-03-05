@@ -7,6 +7,7 @@ import { MagneticCursor } from "@/components/MagneticCursor";
 import { Footer } from "@/components/Footer";
 import CookieConsent from "@/components/CookieConsent";
 import { site } from "@/content/site";
+import { ClerkProvider } from "@clerk/nextjs";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -45,10 +46,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={manrope.className}>
       <body suppressHydrationWarning>
-        <MagneticCursor />
-        <Nav />
-        <main>{children}</main>
-        <Footer />
+        <ClerkProvider>
+          <MagneticCursor />
+          <Nav />
+          <main>{children}</main>
+          <Footer />
+        </ClerkProvider>
       </body>
     </html>
   );

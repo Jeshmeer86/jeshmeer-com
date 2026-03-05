@@ -4,13 +4,11 @@ import { ActionButtons } from "./ActionButtons";
 
 export const dynamic = "force-dynamic";
 
-export default async function ReservationDetail({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+type Props = { params: Promise<{ id: string }> };
+
+export default async function Page({ params }: Props) {
   const { id } = await params;
-  const r = getReservation(id);
+  const r = await getReservation(id);
 
   if (!r) {
     return (
@@ -20,9 +18,10 @@ export default async function ReservationDetail({
     );
   }
 
-  const money = r.deposit.money
-    ? `${r.deposit.money.amount} ${r.deposit.money.currency}`
-    : "N/A";
+  const money =
+    r.deposit?.money?.amount != null && r.deposit?.money?.currency
+      ? `${r.deposit.money.amount} ${r.deposit.money.currency}`
+      : "N/A";
 
   return (
     <main className="min-h-screen p-8">
@@ -32,7 +31,7 @@ export default async function ReservationDetail({
             <div className="text-xs text-white/60">
               Sovereign Demo Concept UI
             </div>
-            <h1 className="mt-2 text-3xl font-semibold">{r.id}</h1>
+            <h1 className="mt-2 text-3xl font-semibold">{id}</h1>
             <div className="mt-2 text-white/70">{r.clientName}</div>
             <div className="text-white/60 text-sm">{r.vehicle}</div>
           </div>
@@ -47,7 +46,7 @@ export default async function ReservationDetail({
 
             <a
               className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/15"
-              href={`/api/demo/reservations/${r.id}/export`}
+              href={`/api/demo/reservations/${id}/export`}
             >
               Export Evidence ZIP
             </a>
@@ -104,7 +103,7 @@ export default async function ReservationDetail({
               </div>
             </div>
 
-            <ActionButtons id={r.id} />
+            <ActionButtons id={id} />
           </div>
 
           <div className="mt-4 space-y-3">

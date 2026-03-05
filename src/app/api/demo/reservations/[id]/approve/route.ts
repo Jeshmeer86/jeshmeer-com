@@ -23,7 +23,7 @@ function decideApproval(
   return { id, actor, status, note };
 }
 
-export async function POST(req: Request, { params }: Ctx) {
+export async function GET(req: Request, { params }: Ctx) {
   const { id } = await params;
 
   const body = await req.json().catch(() => ({}) as any);

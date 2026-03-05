@@ -1,53 +1,32 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/Container";
-import Image from "next/image";
 import { Section } from "@/components/Section";
 import { CTA } from "@/components/CTA";
 import { Badge } from "@/components/Badge";
 import { products } from "@/content/products";
 import { site } from "@/content/site";
-import { Card } from "@/components/Card";
 
-export function generateStaticParams() {
+type Props = {
+  params: Promise<{ slug: string }>;
+};
+
+export function generateStaticParams(): Array<{ slug: string }> {
   return products.map((p) => ({ slug: p.slug }));
 }
 
-function ScreenshotFrame({
-  title,
-  caption,
-}: {
-  title: string;
-  caption: string;
-}) {
-  return (
-    <div className="rounded-2xl border border-line glass shadow-soft overflow-hidden">
-      <div className="flex items-center justify-between border-b border-line bg-bg px-4 py-3">
-        <div className="flex items-center gap-2">
-          <div className="h-2.5 w-2.5 rounded-full bg-line" />
-          <div className="h-2.5 w-2.5 rounded-full bg-line" />
-          <div className="h-2.5 w-2.5 rounded-full bg-line" />
-        </div>
-        <div className="text-xs text-muted">{title}</div>
-      </div>
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const product = products.find((p) => p.slug === slug);
 
-      <div className="p-4">
-        <div className="h-7 w-2/3 rounded-lg bg-bg" />
-        <div className="mt-3 grid gap-2">
-          <div className="h-3 w-full rounded bg-bg" />
-          <div className="h-3 w-11/12 rounded bg-bg" />
-          <div className="h-3 w-10/12 rounded bg-bg" />
-        </div>
+  if (!product) {
+    return { title: "Product | Sovereign Compliance Systems" };
+  }
 
-        <div className="mt-4 grid grid-cols-3 gap-2">
-          <div className="h-12 rounded-xl bg-bg" />
-          <div className="h-12 rounded-xl bg-bg" />
-          <div className="h-12 rounded-xl bg-bg" />
-        </div>
-
-        <div className="mt-4 text-xs text-muted">{caption}</div>
-      </div>
-    </div>
-  );
+  return {
+    title: `${product.name} | Sovereign Compliance Systems`,
+    description: product.oneLiner,
+  };
 }
 
 function FlagshipStory() {
@@ -140,7 +119,7 @@ function FlagshipStory() {
       >
         <div className="grid gap-6 md:grid-cols-2">
           {/* 1 */}
-          <Card>
+          <div className="glass borderGlow rounded-2xl p-6">
             <div className="kicker mb-2 text-xs font-semibold tracking-widest text-gold">
               RESERVATION AND DEPOSIT FLOW
             </div>
@@ -177,10 +156,10 @@ function FlagshipStory() {
                 ))}
               </ul>
             </div>
-          </Card>
+          </div>
 
           {/* 2 */}
-          <Card>
+          <div className="glass borderGlow rounded-2xl p-6">
             <div className="kicker mb-2 text-xs font-semibold tracking-widest text-gold">
               APPROVALS CONSOLE
             </div>
@@ -218,10 +197,10 @@ function FlagshipStory() {
                 ))}
               </div>
             </div>
-          </Card>
+          </div>
 
           {/* 3 */}
-          <Card>
+          <div className="glass borderGlow rounded-2xl p-6">
             <div className="kicker mb-2 text-xs font-semibold tracking-widest text-gold">
               CASE MANAGEMENT QUEUE
             </div>
@@ -263,10 +242,10 @@ function FlagshipStory() {
                 ))}
               </div>
             </div>
-          </Card>
+          </div>
 
           {/* 4 */}
-          <Card>
+          <div className="glass borderGlow rounded-2xl p-6">
             <div className="kicker mb-2 text-xs font-semibold tracking-widest text-gold">
               FRAUD CONTROLS AND MONITORING
             </div>
@@ -304,10 +283,10 @@ function FlagshipStory() {
                 ))}
               </div>
             </div>
-          </Card>
+          </div>
 
           {/* 5 */}
-          <Card>
+          <div className="glass borderGlow rounded-2xl p-6">
             <div className="kicker mb-2 text-xs font-semibold tracking-widest text-gold">
               EVIDENCE VAULT EXPORT
             </div>
@@ -346,10 +325,10 @@ function FlagshipStory() {
                 Manifest and hashes included for integrity.
               </div>
             </div>
-          </Card>
+          </div>
 
           {/* 6 */}
-          <Card>
+          <div className="glass borderGlow rounded-2xl p-6">
             <div className="kicker mb-2 text-xs font-semibold tracking-widest text-gold">
               AUTOMATION AND INTEGRATIONS
             </div>
@@ -379,18 +358,14 @@ function FlagshipStory() {
                 ))}
               </div>
             </div>
-          </Card>
+          </div>
         </div>
       </Section>
     </>
   );
 }
 
-export default async function ProductSlugPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default async function ProductSlugPage({ params }: Props) {
   const { slug } = await params;
 
   const product = products.find((p) => p.slug === slug);
