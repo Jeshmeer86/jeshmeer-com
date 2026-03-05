@@ -2,14 +2,15 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { requireDashboardContext } from "@/lib/tenant";
 import { getOrgPlan, canExportEvidence } from "@/lib/plan";
-import type { PageProps } from "next";
 
-export default async function DealPage({ params }: PageProps) {
+
+export default async function Page({ params }: { params: Promise<{ dealId: string }> }) {
+  const { dealId } = await params;
   const ctx = await requireDashboardContext();
   if (!ctx.ok) return notFound();
 
   const deal = await prisma.deal.findFirst({
-    where: { id: params.dealId, orgId: ctx.dbOrgId },
+    where: { id: dealId, orgId: ctx.dbOrgId },
     include: {
       events: { orderBy: { createdAt: "asc" } },
       deposits: true,
