@@ -136,6 +136,10 @@ export function setDepositReceived(id: string, actor: string) {
   r.deposit.receivedAt = now;
 
   r.audit.push(event(actor, "deposit_received", "Deposit marked as received."));
+  // Log deposit approval event for accountability
+  r.audit.push(
+    event(actor, "deposit_approved", "Deposit approved by " + actor),
+  );
   return r;
 }
 

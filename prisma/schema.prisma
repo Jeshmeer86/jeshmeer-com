@@ -1,3 +1,6 @@
+generator client {
+  provider = "prisma-client-js"
+}
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 //
@@ -18,6 +21,8 @@ model Org {
 
   users        UserOrg[]
   deals        Deal[]
+  dealEvents   DealEvent[]
+  dealDocuments DealDocument[]
   subscription OrgSubscription?
 
   @@index([type])
@@ -38,7 +43,9 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  orgs UserOrg[]
+  orgs              UserOrg[]
+  actedEvents       DealEvent[]    @relation("DealEvent_actorId")
+  uploadedDocuments DealDocument[] @relation("DealDocument_uploadedBy")
 }
 
 model UserOrg {
@@ -72,7 +79,7 @@ model Deal {
   id          String     @id @default(cuid())
   orgId       String
   dealNumber  String
-  status      DealStatus @default(DRAFT)
+  status      DealStatus @default(NEW)
   customerRef String?
   vehicleRef  String?
 
@@ -81,6 +88,7 @@ model Deal {
 
   org      Org            @relation(fields: [orgId], references: [id])
   events   DealEvent[]
+  documents DealDocument[]
   deposits Deposit[]
   evidence EvidenceFile[]
   exports  ExportBundle[]
@@ -90,28 +98,78 @@ model Deal {
   @@index([orgId, status])
 }
 
+enum DealEventType {
+  DEAL_CREATED
+  DOCUMENT_UPLOADED
+  EXPORT_JSON
+  EXPORT_HTML
+  NOTE
+  REVIEWED
+  STATUS_CHANGED
+  DEPOSIT_APPROVED
+}
+
+enum DealDocumentType {
+  ID_DOCUMENT
+  RESERVATION_FORM
+  DEPOSIT_RECEIPT
+  VEHICLE_DOCUMENT
+  FINANCE_DOCUMENT
+  HANDOVER_DOCUMENT
+  OTHER
+}
+
 enum DealStatus {
-  DRAFT
+  NEW
   RESERVED
   DEPOSIT_RECEIVED
   IN_FINANCE
-  READY_FOR_TRANSFER
-  DELIVERED
+  COMPLETED
   CANCELLED
 }
 
 model DealEvent {
   id             String   @id @default(cuid())
   dealId         String
-  organizationId String
-  type           String
+  orgId          String
+  org            Org      @relation(fields: [orgId], references: [id])
+  type           DealEventType
   message        String?
+  payload        Json?
+  ip             String?
+  userAgent      String?
   createdAt      DateTime @default(now())
+  actorId        String?
 
   deal Deal @relation(fields: [dealId], references: [id])
+  actor User? @relation("DealEvent_actorId", fields: [actorId], references: [id])
 
   @@index([dealId, createdAt])
-  @@index([organizationId, createdAt])
+  @@index([orgId, createdAt])
+  @@index([actorId])
+}
+
+model DealDocument {
+  id           String           @id @default(cuid())
+  orgId        String
+  dealId       String
+  fileName     String
+  originalName String
+  mimeType     String
+  fileSize     Int
+  documentType DealDocumentType
+  storagePath  String
+  uploadedBy   String?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  org      Org   @relation(fields: [orgId], references: [id])
+  deal     Deal  @relation(fields: [dealId], references: [id])
+  uploader User? @relation("DealDocument_uploadedBy", fields: [uploadedBy], references: [id])
+
+  @@index([orgId, createdAt])
+  @@index([dealId, createdAt])
+  @@index([orgId, dealId])
 }
 
 model Deposit {

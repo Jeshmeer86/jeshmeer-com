@@ -1,13 +1,21 @@
 import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
+import {
+  createDealWithEvent,
+  isPrismaUniqueConstraintError,
+} from "@/lib/deals";
 import { requireDashboardContext } from "@/lib/tenant";
 
 export async function GET() {
   const ctx = await requireDashboardContext();
   if (!ctx.ok)
-    return NextResponse.json({ error: ctx.reason === "SIGN_IN" ? "Unauthorized" : "Organization required" }, { status: ctx.reason === "SIGN_IN" ? 401 : 400 });
-
+    return NextResponse.json(
+      {
+        error:
+          ctx.reason === "SIGN_IN" ? "Unauthorized" : "Organization required",
+      },
+      { status: ctx.reason === "SIGN_IN" ? 401 : 400 },
+    );
 
   const deals = await prisma.deal.findMany({
     where: { orgId: ctx.dbOrgId },
@@ -21,8 +29,13 @@ export async function GET() {
 export async function POST(req: Request) {
   const ctx = await requireDashboardContext();
   if (!ctx.ok)
-    return NextResponse.json({ error: ctx.reason === "SIGN_IN" ? "Unauthorized" : "Organization required" }, { status: ctx.reason === "SIGN_IN" ? 401 : 400 });
-
+    return NextResponse.json(
+      {
+        error:
+          ctx.reason === "SIGN_IN" ? "Unauthorized" : "Organization required",
+      },
+      { status: ctx.reason === "SIGN_IN" ? 401 : 400 },
+    );
 
   const body = (await req.json().catch(() => null)) as {
     dealNumber?: string;
@@ -34,13 +47,15 @@ export async function POST(req: Request) {
   }
 
   try {
-    const deal = await prisma.deal.create({
-      data: { dealNumber, orgId: ctx.dbOrgId },
+    const deal = await createDealWithEvent({
+      dealNumber,
+      orgId: ctx.dbOrgId,
+      actorId: ctx.dbUserId,
     });
 
     return NextResponse.json({ deal }, { status: 201 });
-  } catch (e: any) {
-    if (e?.code === "P2002") {
+  } catch (error) {
+    if (isPrismaUniqueConstraintError(error)) {
       return NextResponse.json(
         { error: "Deal number already exists for this organization" },
         { status: 409 },

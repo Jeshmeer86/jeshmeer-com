@@ -1,5 +1,7 @@
 "use client";
 
+// TEMP DEV BYPASS - LOCAL ONLY
+const isDevBypass = process.env.NEXT_PUBLIC_DEV_AUTH_BYPASS === "1";
 import { OrganizationSwitcher } from "@clerk/nextjs";
 
 export default function Onboarding() {
@@ -16,14 +18,21 @@ export default function Onboarding() {
         </p>
 
         <div className="mt-6">
-          <OrganizationSwitcher
-            hidePersonal
-            appearance={{
-              elements: {
-                rootBox: "w-full",
-              },
-            }}
-          />
+          {/* TEMP DEV BYPASS - LOCAL ONLY */}
+          {isDevBypass ? (
+            <span className="text-xs text-yellow-500 font-mono">
+              DEV BYPASS: Playwright Test Org
+            </span>
+          ) : (
+            <OrganizationSwitcher
+              hidePersonal
+              appearance={{
+                elements: {
+                  rootBox: "w-full",
+                },
+              }}
+            />
+          )}
         </div>
 
         <p className="mt-6 text-xs text-muted">

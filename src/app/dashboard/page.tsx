@@ -1,3 +1,5 @@
+// TEMP DEV BYPASS - LOCAL ONLY
+const isDevBypass = process.env.NEXT_PUBLIC_DEV_AUTH_BYPASS === "1";
 import { OrganizationSwitcher } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import { requireDashboardContext } from "@/lib/tenant";
@@ -15,7 +17,14 @@ export default async function DashboardHome() {
           This app is multi-tenant. You must set an active Organization to enter
           the dealership workspace.
         </p>
-        <OrganizationSwitcher />
+        {/* TEMP DEV BYPASS - LOCAL ONLY */}
+        {isDevBypass ? (
+          <span className="text-xs text-yellow-500 font-mono">
+            DEV BYPASS: Playwright Test Org
+          </span>
+        ) : (
+          <OrganizationSwitcher />
+        )}
       </div>
     );
   }

@@ -1,84 +1,70 @@
-"use client";
-import * as React from "react";
-import { useEffect, useState } from "react";
+import {
+  DEAL_EVENT_TYPES,
+  getDealEventMessage,
+  getDealEventSecondaryText,
+  shouldRenderDealEventPayload,
+} from "@/lib/deal-events";
 
-type Event = {
+type TimelineEvent = {
   id: string;
   type: string;
+  actorId: string | null;
   message: string | null;
+  payload: unknown;
   createdAt: string;
+  actor?: {
+    name?: string | null;
+    email?: string | null;
+    id?: string;
+  } | null;
 };
 
-export default function DealTimeline({ dealId }: { dealId: string }) {
-  const [events, setEvents] = useState<Event[]>([]);
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchEvents = React.useCallback(async () => {
-    const res = await fetch(`/api/deals/${dealId}/events`);
-    if (res.ok) {
-      const data = await res.json();
-      setEvents(data.events || []);
-    }
-  }, [dealId]);
-
-  useEffect(() => {
-    fetchEvents();
-  }, [fetchEvents]);
-
-  async function handleAddNote(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
-    try {
-      const res = await fetch(`/api/deals/${dealId}/events`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message }),
-      });
-      if (res.ok) {
-        setMessage("");
-        await fetchEvents();
-      } else {
-        const data = await res.json();
-        setError(data.error || "Unknown error");
-      }
-    } catch {
-      setError("Network error");
-    } finally {
-      setLoading(false);
-    }
+export default function DealTimeline({ events }: { events: TimelineEvent[] }) {
+  if (events.length === 0) {
+    return <div className="text-sm opacity-80">No events yet.</div>;
   }
 
   return (
-    <div className="space-y-4">
-      <form onSubmit={handleAddNote} className="flex gap-2">
-        <input
-          value={message}
-          onChange={e => setMessage(e.target.value)}
-          placeholder="Add note"
-          className="border rounded px-3 py-2 w-64"
-          disabled={loading}
-        />
-        <button className="border rounded px-3 py-2" disabled={loading || !message.trim()}>
-          {loading ? "Adding..." : "Add note"}
-        </button>
-      </form>
-      {error && <div className="text-red-600 text-sm mb-2">{error}</div>}
-      <div className="border rounded">
-        <div className="p-3 text-sm font-semibold border-b">Timeline</div>
-        {events.length === 0 ? (
-          <div className="p-3 text-sm opacity-80">No events yet.</div>
-        ) : (
-          events.map(ev => (
-            <div key={ev.id} className="p-3 text-sm border-b">
-              <div className="font-semibold">{ev.type}</div>
-              <div>{ev.message}</div>
-              <div className="text-xs opacity-60">{new Date(ev.createdAt).toLocaleString()}</div>
+    <div className="rounded border">
+      <div className="divide-y">
+        {events.map((event) => (
+          <div key={event.id} className="p-3 text-sm">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="font-medium">{event.type}</span>
+              <span className="opacity-60">
+                {new Date(event.createdAt).toLocaleString()}
+              </span>
+              {event.actorId ? (
+                <span className="rounded border px-2 py-0.5 text-xs">
+                  {event.actor?.name
+                    ? event.actor.name
+                    : event.actor?.email
+                      ? event.actor.email
+                      : `actor: ${event.actorId}`}
+                </span>
+              ) : null}
             </div>
-          ))
-        )}
+            {getDealEventMessage(event) ? (
+              <div className="mt-1 whitespace-pre-line">
+                {getDealEventMessage(event)}
+              </div>
+            ) : null}
+            {getDealEventSecondaryText(event) ? (
+              <div className="mt-1 text-xs opacity-70">
+                {event.type === DEAL_EVENT_TYPES.DOCUMENT_UPLOADED
+                  ? `Type: ${getDealEventSecondaryText(event)}`
+                  : getDealEventSecondaryText(event)}
+              </div>
+            ) : null}
+            {shouldRenderDealEventPayload(event) && event.payload ? (
+              <pre className="mt-2 overflow-x-auto rounded border p-2 text-xs">
+                {typeof event.payload === "object"
+                  ? JSON.stringify(event.payload, null, 2)
+                  : String(event.payload)}
+              </pre>
+            ) : null}
+          </div>
+        ))}
       </div>
     </div>
   );

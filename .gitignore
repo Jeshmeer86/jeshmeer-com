@@ -20,3 +20,6 @@ pnpm-debug.log*
 
 # clerk configuration (can include secrets)
 /.clerk/
+
+# playwright authentication state
+playwright/.auth/
