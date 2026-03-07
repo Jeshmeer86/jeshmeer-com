@@ -8,16 +8,22 @@ export default function EventActions({ dealId }: { dealId: string }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [approving, setApproving] = useState(false);
 
-  async function submit(type: "NOTE" | "REVIEWED") {
+  async function submit(type: "NOTE" | "REVIEWED" | "DEPOSIT_APPROVED") {
     setLoading(true);
     setError("");
     setSuccess("");
     try {
-      const body =
-        type === "NOTE"
-          ? { message: note, type: "NOTE" }
-          : { message: "Marked as reviewed", type: "REVIEWED" };
+      let body;
+      if (type === "NOTE") {
+        body = { message: note, type: "NOTE" };
+      } else if (type === "REVIEWED") {
+        body = { message: "Marked as reviewed", type: "REVIEWED" };
+      } else if (type === "DEPOSIT_APPROVED") {
+        setApproving(true);
+        body = { message: "Deposit approved", type: "DEPOSIT_APPROVED" };
+      }
       const res = await fetch(`/api/deals/${dealId}/events`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -38,6 +44,7 @@ export default function EventActions({ dealId }: { dealId: string }) {
       setError(e instanceof Error ? e.message : "Unknown error");
     } finally {
       setLoading(false);
+      setApproving(false);
     }
   }
 
@@ -72,6 +79,14 @@ export default function EventActions({ dealId }: { dealId: string }) {
           onClick={() => submit("REVIEWED")}
         >
           Mark reviewed
+        </button>
+        <button
+          type="button"
+          className="rounded border px-3 py-2 disabled:opacity-50"
+          disabled={loading || approving}
+          onClick={() => submit("DEPOSIT_APPROVED")}
+        >
+          {approving ? "Approving..." : "Mark deposit approved"}
         </button>
       </div>
       {error && <div className="text-red-500 text-xs">{error}</div>}

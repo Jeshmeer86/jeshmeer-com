@@ -13,6 +13,7 @@ export type AuditEvent = {
     | "reservation_created"
     | "deposit_requested"
     | "deposit_received"
+    | "deposit_approved"
     | "approval_decision"
     | "evidence_exported";
   detail: string;
