@@ -1,6 +1,7 @@
 generator client {
   provider = "prisma-client-js"
 }
+
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 //
@@ -19,11 +20,17 @@ model Org {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  users        UserOrg[]
-  deals        Deal[]
-  dealEvents   DealEvent[]
-  dealDocuments DealDocument[]
-  subscription OrgSubscription?
+  users             UserOrg[]
+  deals             Deal[]
+  dealEvents        DealEvent[]
+  dealDocuments     DealDocument[]
+  subscription      OrgSubscription?
+  customers         Customer[]
+  vehicles          Vehicle[]
+  workshopJobs      WorkshopJob[]
+  workshopJobNotes  WorkshopJobNote[]
+  workshopJobPhotos WorkshopJobPhoto[]
+  workshopJobEvents WorkshopJobEvent[]
 
   @@index([type])
 }
@@ -86,12 +93,12 @@ model Deal {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  org      Org            @relation(fields: [orgId], references: [id])
-  events   DealEvent[]
+  org       Org            @relation(fields: [orgId], references: [id])
+  events    DealEvent[]
   documents DealDocument[]
-  deposits Deposit[]
-  evidence EvidenceFile[]
-  exports  ExportBundle[]
+  deposits  Deposit[]
+  evidence  EvidenceFile[]
+  exports   ExportBundle[]
 
   @@unique([orgId, dealNumber])
   @@index([orgId, createdAt])
@@ -129,19 +136,19 @@ enum DealStatus {
 }
 
 model DealEvent {
-  id             String   @id @default(cuid())
-  dealId         String
-  orgId          String
-  org            Org      @relation(fields: [orgId], references: [id])
-  type           DealEventType
-  message        String?
-  payload        Json?
-  ip             String?
-  userAgent      String?
-  createdAt      DateTime @default(now())
-  actorId        String?
+  id        String        @id @default(cuid())
+  dealId    String
+  orgId     String
+  org       Org           @relation(fields: [orgId], references: [id])
+  type      DealEventType
+  message   String?
+  payload   Json?
+  ip        String?
+  userAgent String?
+  createdAt DateTime      @default(now())
+  actorId   String?
 
-  deal Deal @relation(fields: [dealId], references: [id])
+  deal  Deal  @relation(fields: [dealId], references: [id])
   actor User? @relation("DealEvent_actorId", fields: [actorId], references: [id])
 
   @@index([dealId, createdAt])
@@ -279,4 +286,171 @@ datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
+}
+
+// =============================
+// Sovereign Workshop Control v1
+// =============================
+
+enum WorkshopJobStatus {
+  NEW_ENQUIRY
+  BOOKED_IN
+  INSPECTION
+  ESTIMATE_SENT
+  APPROVED
+  IN_PROGRESS
+  READY_FOR_COLLECTION
+  DELIVERED
+  ON_HOLD
+  CANCELLED
+}
+
+enum WorkshopJobPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+enum WorkshopLeadSource {
+  WHATSAPP
+  CALL
+  WEBSITE
+  WALK_IN
+  GOOGLE
+  INSTAGRAM
+  OTHER
+}
+
+enum WorkshopPhotoType {
+  INTAKE
+  DAMAGE
+  REPAIR
+  COMPLETION
+  OTHER
+}
+
+enum WorkshopEventType {
+  JOB_CREATED
+  STATUS_CHANGED
+  NOTE_ADDED
+  PHOTO_ADDED
+  CUSTOMER_CONTACTED
+  OTHER
+}
+
+model Customer {
+  id        String   @id @default(cuid())
+  orgId     String
+  fullName  String
+  phone     String?
+  email     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  org          Org           @relation(fields: [orgId], references: [id])
+  vehicles     Vehicle[]
+  workshopJobs WorkshopJob[]
+
+  @@index([orgId])
+}
+
+model Vehicle {
+  id          String   @id @default(cuid())
+  orgId       String
+  customerId  String
+  make        String
+  model       String
+  year        Int?
+  plateNumber String?
+  vin         String?
+  color       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  org          Org           @relation(fields: [orgId], references: [id])
+  customer     Customer      @relation(fields: [customerId], references: [id])
+  workshopJobs WorkshopJob[]
+
+  @@index([orgId])
+  @@index([customerId])
+}
+
+model WorkshopJob {
+  id         String              @id @default(cuid())
+  orgId      String
+  customerId String
+  vehicleId  String
+  title      String
+  complaint  String?
+  status     WorkshopJobStatus   @default(NEW_ENQUIRY)
+  priority   WorkshopJobPriority @default(NORMAL)
+  source     WorkshopLeadSource  @default(OTHER)
+  openedAt   DateTime            @default(now())
+  closedAt   DateTime?
+  createdBy  String?
+  createdAt  DateTime            @default(now())
+  updatedAt  DateTime            @updatedAt
+
+  org      Org                @relation(fields: [orgId], references: [id])
+  customer Customer           @relation(fields: [customerId], references: [id])
+  vehicle  Vehicle            @relation(fields: [vehicleId], references: [id])
+  notes    WorkshopJobNote[]
+  photos   WorkshopJobPhoto[]
+  events   WorkshopJobEvent[]
+
+  @@index([orgId, status])
+  @@index([orgId, openedAt])
+  @@index([customerId])
+  @@index([vehicleId])
+}
+
+model WorkshopJobNote {
+  id        String   @id @default(cuid())
+  orgId     String
+  jobId     String
+  body      String
+  createdBy String?
+  createdAt DateTime @default(now())
+
+  org Org         @relation(fields: [orgId], references: [id])
+  job WorkshopJob @relation(fields: [jobId], references: [id])
+
+  @@index([orgId])
+  @@index([jobId])
+}
+
+model WorkshopJobPhoto {
+  id           String            @id @default(cuid())
+  orgId        String
+  jobId        String
+  fileName     String
+  originalName String
+  mimeType     String
+  fileSize     Int
+  photoType    WorkshopPhotoType @default(OTHER)
+  uploadedBy   String?
+  createdAt    DateTime          @default(now())
+
+  org Org         @relation(fields: [orgId], references: [id])
+  job WorkshopJob @relation(fields: [jobId], references: [id])
+
+  @@index([orgId])
+  @@index([jobId])
+}
+
+model WorkshopJobEvent {
+  id        String            @id @default(cuid())
+  orgId     String
+  jobId     String
+  eventType WorkshopEventType @default(OTHER)
+  message   String?
+  actor     String?
+  createdAt DateTime          @default(now())
+
+  org Org         @relation(fields: [orgId], references: [id])
+  job WorkshopJob @relation(fields: [jobId], references: [id])
+
+  @@index([orgId])
+  @@index([jobId])
 }
