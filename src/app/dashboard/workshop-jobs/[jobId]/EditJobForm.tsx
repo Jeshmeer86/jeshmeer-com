@@ -13,6 +13,19 @@ export function EditJobForm({
     status: string;
     priority: string;
     source: string;
+    customer: {
+      fullName: string;
+      phone: string;
+      email: string;
+    };
+    vehicle: {
+      make: string;
+      model: string;
+      year: number | null;
+      plateNumber: string;
+      vin: string;
+      color: string;
+    };
   };
   onSave: (data: any) => void;
   saving: boolean;
@@ -24,6 +37,15 @@ export function EditJobForm({
     status: job.status,
     priority: job.priority,
     source: job.source,
+    customerFullName: job.customer?.fullName || "",
+    customerPhone: job.customer?.phone || "",
+    customerEmail: job.customer?.email || "",
+    vehicleMake: job.vehicle?.make || "",
+    vehicleModel: job.vehicle?.model || "",
+    vehicleYear: job.vehicle?.year?.toString() || "",
+    vehiclePlateNumber: job.vehicle?.plateNumber || "",
+    vehicleVin: job.vehicle?.vin || "",
+    vehicleColor: job.vehicle?.color || "",
   });
 
   function handleChange(
@@ -40,28 +62,58 @@ export function EditJobForm({
   }
 
   return (
-    <form className="space-y-3" onSubmit={handleSubmit}>
-      <div>
-        <label className="block text-sm font-medium mb-1">Title</label>
-        <input
-          name="title"
-          value={form.title}
-          onChange={handleChange}
-          className="input input-sm w-full"
-          required
-        />
+    <form className="space-y-3 relative" onSubmit={handleSubmit}>
+      <div className="flex justify-end gap-2 mb-2">
+        <button type="submit" className="btn btn-gold" disabled={saving}>
+          {saving ? "Saving..." : "Save Changes"}
+        </button>
+        <button
+          type="button"
+          className="btn btn-outline"
+          onClick={() =>
+            setForm({
+              title: job.title,
+              complaint: job.complaint || "",
+              status: job.status,
+              priority: job.priority,
+              source: job.source,
+              customerFullName: job.customer?.fullName || "",
+              customerPhone: job.customer?.phone || "",
+              customerEmail: job.customer?.email || "",
+              vehicleMake: job.vehicle?.make || "",
+              vehicleModel: job.vehicle?.model || "",
+              vehicleYear: job.vehicle?.year?.toString() || "",
+              vehiclePlateNumber: job.vehicle?.plateNumber || "",
+              vehicleVin: job.vehicle?.vin || "",
+              vehicleColor: job.vehicle?.color || "",
+            })
+          }
+          disabled={saving}
+        >
+          Reset
+        </button>
       </div>
-      <div>
-        <label className="block text-sm font-medium mb-1">Complaint</label>
-        <textarea
-          name="complaint"
-          value={form.complaint}
-          onChange={handleChange}
-          className="input input-sm w-full"
-        />
-      </div>
-      <div className="flex gap-2">
-        <div className="flex-1">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium mb-1">Title</label>
+          <input
+            name="title"
+            value={form.title}
+            onChange={handleChange}
+            className="input input-sm w-full"
+            required
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-1">Complaint</label>
+          <input
+            name="complaint"
+            value={form.complaint}
+            onChange={handleChange}
+            className="input input-sm w-full"
+          />
+        </div>
+        <div>
           <label className="block text-sm font-medium mb-1">Status</label>
           <select
             name="status"
@@ -81,7 +133,7 @@ export function EditJobForm({
             <option value="CANCELLED">Cancelled</option>
           </select>
         </div>
-        <div className="flex-1">
+        <div>
           <label className="block text-sm font-medium mb-1">Priority</label>
           <select
             name="priority"
@@ -95,7 +147,7 @@ export function EditJobForm({
             <option value="URGENT">Urgent</option>
           </select>
         </div>
-        <div className="flex-1">
+        <div>
           <label className="block text-sm font-medium mb-1">Source</label>
           <select
             name="source"
@@ -111,6 +163,105 @@ export function EditJobForm({
             <option value="INSTAGRAM">Instagram</option>
             <option value="OTHER">Other</option>
           </select>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium mb-1">
+            Customer Full Name
+          </label>
+          <input
+            name="customerFullName"
+            value={form.customerFullName}
+            onChange={handleChange}
+            className="input input-sm w-full"
+            required
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-1">
+            Customer Phone
+          </label>
+          <input
+            name="customerPhone"
+            value={form.customerPhone}
+            onChange={handleChange}
+            className="input input-sm w-full"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-1">
+            Customer Email
+          </label>
+          <input
+            name="customerEmail"
+            value={form.customerEmail}
+            onChange={handleChange}
+            className="input input-sm w-full"
+          />
+        </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label className="block text-sm font-medium mb-1">Vehicle Make</label>
+          <input
+            name="vehicleMake"
+            value={form.vehicleMake}
+            onChange={handleChange}
+            className="input input-sm w-full"
+            required
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-1">
+            Vehicle Model
+          </label>
+          <input
+            name="vehicleModel"
+            value={form.vehicleModel}
+            onChange={handleChange}
+            className="input input-sm w-full"
+            required
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-1">Vehicle Year</label>
+          <input
+            name="vehicleYear"
+            value={form.vehicleYear}
+            onChange={handleChange}
+            className="input input-sm w-full"
+            type="number"
+            min="1900"
+            max="2100"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-1">Plate Number</label>
+          <input
+            name="vehiclePlateNumber"
+            value={form.vehiclePlateNumber}
+            onChange={handleChange}
+            className="input input-sm w-full"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-1">VIN</label>
+          <input
+            name="vehicleVin"
+            value={form.vehicleVin}
+            onChange={handleChange}
+            className="input input-sm w-full"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-1">Color</label>
+          <input
+            name="vehicleColor"
+            value={form.vehicleColor}
+            onChange={handleChange}
+            className="input input-sm w-full"
+          />
         </div>
       </div>
       {error && <div className="text-red-500 text-sm">{error}</div>}

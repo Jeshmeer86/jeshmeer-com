@@ -1,20 +1,21 @@
 import { requireDashboardContext } from "@/lib/tenant";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
-import { EditJobForm } from "./EditJobForm";
-import { updateWorkshopJob } from "./actions";
-import { NoteActions } from "./NoteActions";
+import { EditJobClient } from "./EditJobClient";
 import { StatusChanger } from "./StatusChanger";
 import { PhotoSection } from "./PhotoSection";
+import { NotesSection } from "./NotesSection";
+import { notFound } from "next/navigation";
+
+interface WorkshopJobDetailPageProps {
+  params: { jobId: string };
+}
 
 export default async function WorkshopJobDetailPage({
   params,
-}: {
-  params: { jobId: string };
-}) {
+}: WorkshopJobDetailPageProps) {
   const ctx = await requireDashboardContext();
-  if (!ctx.ok) return null;
-
+  if (!ctx.ok) notFound();
   const job = await prisma.workshopJob.findUnique({
     where: { id: params.jobId, orgId: ctx.dbOrgId },
     include: {
@@ -25,38 +26,34 @@ export default async function WorkshopJobDetailPage({
       photos: true,
     },
   });
-  if (!job) return <div className="p-8">Job not found.</div>;
-
-  let error: string | null = null;
-  let saving = false;
-
-  async function handleEditJob(formData: any) {
-    saving = true;
-    try {
-      await updateWorkshopJob(job.id, formData);
-      // Optionally, you can refresh the page or re-fetch data here
-    } catch (e: any) {
-      error = e.message || "Failed to update job";
-    } finally {
-      saving = false;
-    }
-  }
+  if (!job) notFound();
 
   return (
     <section className="max-w-3xl mx-auto space-y-8">
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 rounded-xl border border-zinc-800 bg-black/70 p-6 shadow-lg">
         <div className="flex-1 space-y-4">
-          <EditJobForm
+          <EditJobClient
             job={{
               title: job.title,
               complaint: job.complaint,
               status: job.status,
               priority: job.priority,
               source: job.source,
+              customer: {
+                fullName: job.customer?.fullName || "",
+                phone: job.customer?.phone || "",
+                email: job.customer?.email || "",
+              },
+              vehicle: {
+                make: job.vehicle?.make || "",
+                model: job.vehicle?.model || "",
+                year: job.vehicle?.year ?? null,
+                plateNumber: job.vehicle?.plateNumber || "",
+                vin: job.vehicle?.vin || "",
+                color: job.vehicle?.color || "",
+              },
             }}
-            onSave={handleEditJob}
-            saving={saving}
-            error={error}
+            jobId={job.id}
           />
           <StatusChanger jobId={job.id} currentStatus={job.status} />
         </div>
@@ -101,29 +98,58 @@ export default async function WorkshopJobDetailPage({
           </div>
           <div className="bg-zinc-900 p-4 rounded-xl border border-zinc-800">
             <h2 className="font-semibold mb-2">Notes</h2>
-            <ul className="list-disc pl-4 mb-2">
-              {job.notes.length === 0 && (
-                <li className="text-zinc-500">No notes yet.</li>
-              )}
-              {job.notes.map((note) => (
-                <li key={note.id}>{note.body}</li>
-              ))}
-            </ul>
-            <NoteActions jobId={job.id} />
+            <NotesSection jobId={job.id} notes={job.notes} />
           </div>
         </div>
       </div>
       <div className="bg-zinc-900 p-4 rounded-xl border border-zinc-800">
         <h2 className="font-semibold mb-2">Timeline</h2>
         <ul className="list-disc pl-4">
-          {job.events.length === 0 && (
-            <li className="text-zinc-500">No events yet.</li>
-          )}
-          {job.events.map((event) => (
-            <li key={event.id}>
-              {event.eventType}: {event.message}
-            </li>
-          ))}
+          {job.events
+            .filter((event) =>
+              [
+                "JOB_CREATED",
+                "STATUS_CHANGED",
+                "NOTE_ADDED",
+                "PHOTO_ADDED",
+                "OTHER",
+              ].includes(event.eventType),
+            )
+            .sort(
+              (a, b) =>
+                new Date(a.createdAt).getTime() -
+                new Date(b.createdAt).getTime(),
+            )
+            .map((event) => (
+              <li key={event.id}>
+                <span className="font-semibold">
+                  {event.eventType.replace("_", " ")}
+                </span>
+                {": "}
+                {event.message}{" "}
+                <span className="text-xs text-zinc-400">
+                  (
+                  {new Date(event.createdAt).toLocaleString("en-GB", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: true,
+                  })}
+                  )
+                </span>
+              </li>
+            ))}
+          {job.events.filter((event) =>
+            [
+              "JOB_CREATED",
+              "STATUS_CHANGED",
+              "NOTE_ADDED",
+              "PHOTO_ADDED",
+              "OTHER",
+            ].includes(event.eventType),
+          ).length === 0 && <li className="text-zinc-500">No events yet.</li>}
         </ul>
       </div>
       <div className="bg-zinc-900 p-4 rounded-xl border border-zinc-800">

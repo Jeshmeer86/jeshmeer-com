@@ -1,0 +1,42 @@
+/* Shared UI for Building System Control */
+.btn-primary {
+  background: #2563eb;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 1rem;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-primary:hover {
+  background: #1d4ed8;
+}
+.input-lg {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.125rem;
+  border-radius: 0.75rem;
+  border: 1px solid #e5e7eb;
+  margin-bottom: 0.5rem;
+}
+.icon-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #f3f4f6;
+  border-radius: 1rem;
+  padding: 1.5rem 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 500;
+  border: 2px solid transparent;
+  transition:
+    border 0.2s,
+    background 0.2s;
+}
+.icon-card.selected {
+  border: 2px solid #2563eb;
+  background: #dbeafe;
+}

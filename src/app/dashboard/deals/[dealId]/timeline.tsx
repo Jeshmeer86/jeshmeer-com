@@ -25,44 +25,33 @@ export default function DealTimeline({ events }: { events: TimelineEvent[] }) {
   }
 
   return (
-    <div className="rounded border">
-      <div className="divide-y">
+    <div className="rounded border border-zinc-800 bg-black/60">
+      <div className="divide-y divide-zinc-800">
         {events.map((event) => (
           <div key={event.id} className="p-3 text-sm">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="font-medium">{event.type}</span>
+              <span className="font-medium text-gold-300">
+                {event.type.replace(/_/g, " ")}
+              </span>
               <span className="opacity-60">
-                {new Date(event.createdAt).toLocaleString()}
+                {new Date(event.createdAt).toLocaleString("en-GB", {
+                  dateStyle: "medium",
+                  timeStyle: "short",
+                })}
               </span>
               {event.actorId ? (
-                <span className="rounded border px-2 py-0.5 text-xs">
+                <span className="rounded border border-zinc-700 px-2 py-0.5 text-xs bg-zinc-900 text-zinc-200">
                   {event.actor?.name
                     ? event.actor.name
-                    : event.actor?.email
-                      ? event.actor.email
-                      : `actor: ${event.actorId}`}
+                    : event.actor?.email || event.actorId}
                 </span>
               ) : null}
             </div>
-            {getDealEventMessage(event) ? (
-              <div className="mt-1 whitespace-pre-line">
-                {getDealEventMessage(event)}
-              </div>
-            ) : null}
-            {getDealEventSecondaryText(event) ? (
-              <div className="mt-1 text-xs opacity-70">
-                {event.type === DEAL_EVENT_TYPES.DOCUMENT_UPLOADED
-                  ? `Type: ${getDealEventSecondaryText(event)}`
-                  : getDealEventSecondaryText(event)}
-              </div>
-            ) : null}
-            {shouldRenderDealEventPayload(event) && event.payload ? (
-              <pre className="mt-2 overflow-x-auto rounded border p-2 text-xs">
-                {typeof event.payload === "object"
-                  ? JSON.stringify(event.payload, null, 2)
-                  : String(event.payload)}
-              </pre>
-            ) : null}
+            <div className="mt-1 text-zinc-300">
+              {event.message || (
+                <span className="italic">No details provided</span>
+              )}
+            </div>
           </div>
         ))}
       </div>

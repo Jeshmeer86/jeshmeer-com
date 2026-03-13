@@ -30,7 +30,18 @@ model Org {
   workshopJobs      WorkshopJob[]
   workshopJobNotes  WorkshopJobNote[]
   workshopJobPhotos WorkshopJobPhoto[]
+
   workshopJobEvents WorkshopJobEvent[]
+
+  // Rentals relations
+  rentalQuoteRequests RentalQuoteRequest[]
+  rentalBookings RentalBooking[]
+  rentalDocuments RentalDocument[]
+  rentalDeposits RentalDeposit[]
+  rentalIssues RentalIssue[]
+  rentalMessageLogs RentalMessageLog[]
+  rentalReminders RentalReminder[]
+  rentalEvents RentalEvent[]
 
   @@index([type])
 }
@@ -350,7 +361,16 @@ model Customer {
 
   org          Org           @relation(fields: [orgId], references: [id])
   vehicles     Vehicle[]
+
   workshopJobs WorkshopJob[]
+
+  // Rentals relations
+  rentalQuoteRequests RentalQuoteRequest[]
+  rentalBookings RentalBooking[]
+  rentalDocuments RentalDocument[]
+  rentalIssues RentalIssue[]
+  rentalMessageLogs RentalMessageLog[]
+  rentalEvents RentalEvent[]
 
   @@index([orgId])
 }
@@ -370,10 +390,12 @@ model Vehicle {
 
   org          Org           @relation(fields: [orgId], references: [id])
   customer     Customer      @relation(fields: [customerId], references: [id])
+
   workshopJobs WorkshopJob[]
 
-  @@index([orgId])
-  @@index([customerId])
+
+  // Rentals relations
+  rentalBookings RentalBooking[]
 }
 
 model WorkshopJob {
@@ -453,4 +475,303 @@ model WorkshopJobEvent {
 
   @@index([orgId])
   @@index([jobId])
+}
+
+// =============================
+// Sovereign Rentals v1
+// =============================
+
+enum RentalQuoteRequestStatus {
+  NEW
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+enum RentalBookingStatus {
+  PENDING
+  CONFIRMED
+  ACTIVE
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum RentalDepositStatus {
+  NOT_REQUIRED
+  HELD
+  RELEASED
+  FORFEITED
+}
+
+enum RentalIssueType {
+  DAMAGE
+  LATE_RETURN
+  PAYMENT
+  OTHER
+}
+
+enum RentalIssuePriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+enum RentalIssueStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum RentalReminderType {
+  PICKUP
+  RETURN
+  PAYMENT
+  OTHER
+}
+
+enum RentalReminderStatus {
+  PENDING
+  SENT
+  FAILED
+  CANCELLED
+}
+
+enum RentalEventType {
+  BOOKING_CREATED
+  STATUS_CHANGED
+  PAYMENT_RECEIVED
+  DOCUMENT_UPLOADED
+  ISSUE_REPORTED
+  NOTE
+  OTHER
+}
+
+enum RentalDocumentType {
+  AGREEMENT
+  INVOICE
+  RECEIPT
+  ID_DOCUMENT
+  VEHICLE_DOCUMENT
+  OTHER
+}
+
+enum RentalMessageDirection {
+  INBOUND
+  OUTBOUND
+}
+
+enum RentalMessageChannel {
+  WHATSAPP
+  SMS
+  EMAIL
+  CALL
+  OTHER
+}
+
+model RentalQuoteRequest {
+  id String @id @default(cuid())
+  orgId String
+  customerId String?
+  fullName String
+  whatsappPhone String
+  requestedCategory String?
+  requestedVehicle String?
+  startDate DateTime?
+  endDate DateTime?
+  pickupLocation String?
+  dropoffLocation String?
+  source String?
+  status RentalQuoteRequestStatus @default(NEW)
+  notes String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  org Org @relation(fields: [orgId], references: [id])
+  customer Customer? @relation(fields: [customerId], references: [id])
+
+  bookings RentalBooking[] @relation("RentalQuoteRequestToBooking")
+
+  @@index([orgId, createdAt])
+  @@index([orgId, status])
+  @@index([customerId])
+}
+
+model RentalBooking {
+  id String @id @default(cuid())
+  orgId String
+  customerId String
+  vehicleId String?
+  quoteRequestId String?
+  reservationCode String
+  agreementNumber String?
+  invoiceNumber String?
+  startDate DateTime
+  endDate DateTime
+  pickupLocation String?
+  dropoffLocation String?
+  totalAmount Int?
+  currency String @default("AED")
+  bookingStatus RentalBookingStatus @default(PENDING)
+  depositAmount Int?
+  depositStatus RentalDepositStatus @default(NOT_REQUIRED)
+  salikNotes String?
+  fineNotes String?
+  notes String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  org Org @relation(fields: [orgId], references: [id])
+  customer Customer @relation(fields: [customerId], references: [id])
+  vehicle Vehicle? @relation(fields: [vehicleId], references: [id])
+  quoteRequest RentalQuoteRequest? @relation("RentalQuoteRequestToBooking", fields: [quoteRequestId], references: [id])
+  documents RentalDocument[]
+  deposits RentalDeposit[]
+  issues RentalIssue[]
+  reminders RentalReminder[]
+  events RentalEvent[]
+  messageLogs RentalMessageLog[]
+
+  @@unique([orgId, reservationCode])
+  @@index([orgId, bookingStatus])
+  @@index([orgId, startDate])
+  @@index([orgId, endDate])
+  @@index([customerId])
+  @@index([vehicleId])
+}
+
+model RentalDocument {
+  id String @id @default(cuid())
+  orgId String
+  bookingId String?
+  customerId String?
+  documentType RentalDocumentType
+  fileName String
+  originalName String
+  fileUrl String
+  mimeType String
+  fileSize Int
+  uploadedBy String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  org Org @relation(fields: [orgId], references: [id])
+  booking RentalBooking? @relation(fields: [bookingId], references: [id])
+  customer Customer? @relation(fields: [customerId], references: [id])
+
+  @@index([orgId, createdAt])
+  @@index([bookingId])
+  @@index([customerId])
+}
+
+model RentalDeposit {
+  id String @id @default(cuid())
+  orgId String
+  bookingId String
+  amount Int
+  currency String @default("AED")
+  status RentalDepositStatus @default(HELD)
+  heldAt DateTime?
+  releasedAt DateTime?
+  notes String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  org Org @relation(fields: [orgId], references: [id])
+  booking RentalBooking @relation(fields: [bookingId], references: [id])
+
+  @@index([orgId, createdAt])
+  @@index([bookingId])
+  @@index([orgId, status])
+}
+
+model RentalIssue {
+  id String @id @default(cuid())
+  orgId String
+  bookingId String?
+  customerId String?
+  issueType RentalIssueType
+  description String
+  priority RentalIssuePriority @default(NORMAL)
+  status RentalIssueStatus @default(OPEN)
+  reportedAt DateTime @default(now())
+  resolvedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  org Org @relation(fields: [orgId], references: [id])
+  booking RentalBooking? @relation(fields: [bookingId], references: [id])
+  customer Customer? @relation(fields: [customerId], references: [id])
+
+  @@index([orgId, reportedAt])
+  @@index([orgId, status])
+  @@index([bookingId])
+  @@index([customerId])
+}
+
+model RentalMessageLog {
+  id String @id @default(cuid())
+  orgId String
+  bookingId String?
+  customerId String?
+  direction RentalMessageDirection
+  channel RentalMessageChannel @default(WHATSAPP)
+  templateName String?
+  messageText String
+  deliveryStatus String?
+  sentAt DateTime?
+  deliveredAt DateTime?
+  readAt DateTime?
+  createdAt DateTime @default(now())
+
+  org Org @relation(fields: [orgId], references: [id])
+  booking RentalBooking? @relation(fields: [bookingId], references: [id])
+  customer Customer? @relation(fields: [customerId], references: [id])
+
+  @@index([orgId, createdAt])
+  @@index([bookingId])
+  @@index([customerId])
+}
+
+model RentalReminder {
+  id String @id @default(cuid())
+  orgId String
+  bookingId String
+  reminderType RentalReminderType
+  scheduledFor DateTime
+  status RentalReminderStatus @default(PENDING)
+  lastAttemptAt DateTime?
+  sentAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  org Org @relation(fields: [orgId], references: [id])
+  booking RentalBooking @relation(fields: [bookingId], references: [id])
+
+  @@index([orgId, scheduledFor])
+  @@index([bookingId])
+  @@index([orgId, status])
+}
+
+model RentalEvent {
+  id String @id @default(cuid())
+  orgId String
+  bookingId String?
+  customerId String?
+  eventType RentalEventType
+  message String?
+  metadataJson Json?
+  createdBy String?
+  createdAt DateTime @default(now())
+
+  org Org @relation(fields: [orgId], references: [id])
+  booking RentalBooking? @relation(fields: [bookingId], references: [id])
+  customer Customer? @relation(fields: [customerId], references: [id])
+
+  @@index([orgId, createdAt])
+  @@index([bookingId])
+  @@index([customerId])
 }

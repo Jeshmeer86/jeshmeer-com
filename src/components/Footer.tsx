@@ -12,8 +12,7 @@ export function Footer() {
               {site.name}
             </div>
             <div className="mt-2 text-sm text-muted">
-              Bespoke software. Governance by design. Evidence grade audit
-              trails.
+              Custom software development. AI automation. Workflow engineering.
             </div>
             <div className="mt-3 text-sm text-muted">{site.location}</div>
           </div>
@@ -21,17 +20,17 @@ export function Footer() {
           <div>
             <div className="text-sm font-semibold">Pages</div>
             <div className="mt-3 grid gap-2 text-sm text-muted">
-              <Link href="/products" className="hover:text-text">
-                Products
+              <Link href="/" className="hover:text-text">
+                Home
               </Link>
               <Link href="/ai-automation" className="hover:text-text">
-                AI and Automation
+                AI Automation
               </Link>
-              <Link href="/industries" className="hover:text-text">
-                Industries
+              <Link href="/products" className="hover:text-text">
+                Product Suite
               </Link>
-              <Link href="/trust-center" className="hover:text-text">
-                Trust Center
+              <Link href="/how-we-work" className="hover:text-text">
+                How I Work
               </Link>
             </div>
             <div className="mt-6 text-sm font-semibold">Legal</div>
@@ -58,8 +57,7 @@ export function Footer() {
             </div>
             <div className="mt-2 text-sm text-muted">{site.pricingNote}</div>
             <div className="mt-4 text-xs text-muted">
-              In-house counsel supports governance and documentation within
-              client engagements.
+              Premium, direct, and software-focused. No agency fluff.
             </div>
           </div>
         </div>

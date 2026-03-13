@@ -20,7 +20,7 @@ export function ProductSuiteSection() {
   return (
     <Section
       title="Product Suite"
-      subtitle="Flagship platform, core modules, and add-ons. Built for high trust environments."
+      subtitle="Flagship platform, core modules, and add-ons. Built for ambitious businesses."
     >
       <Container>
         {/* Flagship */}
@@ -65,35 +65,35 @@ export function ProductSuiteSection() {
           </div>
         )}
 
-        {/* Trust shortcuts */}
+        {/* Shortcuts */}
         <div className="grid gap-4 md:grid-cols-2" data-reveal>
           <Card>
-            <div className="text-sm font-semibold">Governance Pack</div>
+            <div className="text-sm font-semibold">Automation & AI</div>
             <p className="mt-2 text-sm text-muted">
-              Governance-by-design, documentation discipline, and evidence-ready
-              thinking.
+              Automate business workflows, reduce manual work, and unlock new
+              capabilities with AI.
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
-              <Button href="/governance-pack" variant="secondary">
-                View Governance Pack
+              <Button href="/ai-automation" variant="secondary">
+                See AI Automation
               </Button>
               <Button href="/contact" variant="primary">
-                Request a private consult
+                Start your project
               </Button>
             </div>
           </Card>
 
           <Card>
-            <div className="text-sm font-semibold">Trust Center</div>
+            <div className="text-sm font-semibold">How I Work</div>
             <p className="mt-2 text-sm text-muted">
-              Privacy, cookies, terms, consent flows, and transparency signals.
+              Premium, direct, and software-focused. No agency fluff.
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
-              <Button href="/trust-center" variant="secondary">
-                View Trust Center
+              <Button href="/how-we-work" variant="secondary">
+                How I Work
               </Button>
               <Button href="/contact" variant="primary">
-                Request a private consult
+                Start your project
               </Button>
             </div>
           </Card>
@@ -104,7 +104,7 @@ export function ProductSuiteSection() {
             View full product list
           </Button>
           <Button href="/contact" variant="primary">
-            Request a private consult
+            Start your project
           </Button>
         </div>
       </Container>

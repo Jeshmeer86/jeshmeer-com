@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Button } from "./Button";
 import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
@@ -8,14 +9,10 @@ import { Container } from "./Container";
 import { site } from "@/content/site";
 
 const nav = [
-  // { href: "/products", label: "Products" }, // Hidden as requested
-  { href: "/ai-automation", label: "AI and Automation" },
-  { href: "/proof-pack", label: "Proof Pack" },
-  { href: "/governance-pack", label: "Governance Pack" },
-  // { href: "/industries", label: "Industries" }, // Hidden by default
-  { href: "/how-we-work", label: "How we work" },
-  // { href: "/security-assurance", label: "Security and Assurance" }, // Hidden as requested
-  { href: "/company", label: "Company structure" },
+  { href: "/", label: "Home" },
+  { href: "/ai-automation", label: "AI Automation" },
+  { href: "/products", label: "Product Suite" },
+  { href: "/how-we-work", label: "How I Work" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -28,11 +25,14 @@ export function Nav({
   // Compose nav items, conditionally including Industries
   const navItems = showIndustries
     ? [
-        ...nav.slice(0, 4),
+        ...nav.slice(0, 5),
         { href: "/industries", label: "Industries" },
-        ...nav.slice(4),
+        ...nav.slice(5),
       ]
     : nav;
+
+  // Get current path for active link styling
+  const pathname = usePathname();
 
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-bg/25 backdrop-blur">
@@ -73,7 +73,13 @@ export function Nav({
                 <Link
                   key={i.href}
                   href={i.href}
-                  className="text-sm text-muted hover:text-platinum"
+                  className={
+                    "text-sm hover:text-platinum text-muted" +
+                    (pathname === i.href ||
+                    (i.href !== "/" && pathname?.startsWith(i.href))
+                      ? " font-bold text-platinum underline underline-offset-4"
+                      : "")
+                  }
                   data-magnetic
                 >
                   {i.label}
@@ -131,7 +137,13 @@ export function Nav({
               <Link
                 key={i.href}
                 href={i.href}
-                className="text-lg font-semibold text-text py-2 px-2 rounded hover:bg-panel/40"
+                className={
+                  "text-lg font-semibold py-2 px-2 rounded hover:bg-panel/40 text-text" +
+                  (pathname === i.href ||
+                  (i.href !== "/" && pathname?.startsWith(i.href))
+                    ? " bg-panel/60 text-platinum underline underline-offset-4"
+                    : "")
+                }
                 onClick={() => setMobileNavOpen(false)}
               >
                 {i.label}

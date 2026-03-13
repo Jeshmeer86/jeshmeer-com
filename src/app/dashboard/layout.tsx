@@ -2,7 +2,9 @@ export const dynamic = "force-dynamic";
 
 // TEMP DEV BYPASS - LOCAL ONLY
 const isDevBypass = process.env.NEXT_PUBLIC_DEV_AUTH_BYPASS === "1";
+
 import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
+import { DashboardNav } from "@/components/DashboardNav";
 
 export default function DashboardLayout({
   children,
@@ -10,7 +12,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen flex flex-col">
       <header className="flex items-center justify-between gap-3 p-4 border-b">
         <div className="font-semibold">Sovereign Dashboard</div>
         <div className="flex items-center gap-3">
@@ -27,7 +29,12 @@ export default function DashboardLayout({
           )}
         </div>
       </header>
-      <main className="p-6">{children}</main>
+      <div className="flex flex-1">
+        <aside className="hidden md:block border-r border-zinc-800 bg-black/80 min-w-[180px]">
+          <DashboardNav />
+        </aside>
+        <main className="flex-1 p-6">{children}</main>
+      </div>
     </div>
   );
 }

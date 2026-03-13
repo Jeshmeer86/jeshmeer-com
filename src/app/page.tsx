@@ -87,46 +87,34 @@ export default function Home() {
                       data-hero
                       className="kicker mb-3 text-xs font-semibold tracking-widest text-gold"
                     >
-                      DEALERSHIP OPERATIONS PLATFORM
+                      CUSTOM SOFTWARE & AI AUTOMATION
                     </div>
 
                     <h1 className="mb-4 text-4xl font-bold leading-tight md:text-5xl">
                       <span className="inline-flex flex-wrap gap-x-2">
-                        {site.headline.split(" ").map((w, i) => (
-                          <span key={i} data-word className="inline-block">
-                            {w}
-                          </span>
-                        ))}
+                        {"I build custom software, automate business workflows, and deliver web-based operational systems."
+                          .split(" ")
+                          .map((w, i) => (
+                            <span key={i} data-word className="inline-block">
+                              {w}
+                            </span>
+                          ))}
                       </span>
                     </h1>
 
                     <p data-hero className="mb-6 max-w-xl text-lg text-muted">
-                      Government platforms handle the legal ownership transfer.
-                      Sovereign runs the dealership deal layer: reservations,
-                      deposits, approvals, finance checkpoints, document
-                      capture, staff accountability, audit trails, and an
-                      evidence vault.
-                    </p>
-
-                    <p data-hero className="mb-7 max-w-xl text-base text-muted">
-                      Built for used car deals (cash or finance). When something
-                      is questioned, your team generates a complete proof pack
-                      in a single click: timeline, receipts, approvals, uploaded
-                      documents, and the export bundle.
-                    </p>
-
-                    <p data-hero className="mb-7 max-w-xl text-xs text-muted">
-                      Disclosure: Sovereign Compliance Systems is not affiliated
-                      with RTA, MOI, or any UAE government entity. We operate
-                      alongside official transfer processes.
+                      Premium software development for ambitious businesses. I
+                      design and build internal systems, automate workflows with
+                      AI, and create web-based platforms that drive real
+                      operational results.
                     </p>
 
                     <div data-hero className="mb-7 flex flex-wrap gap-3">
                       <Button href="/contact" variant="primary">
-                        Request a private consult
+                        Start your project
                       </Button>
-                      <Button href="/products" variant="secondary">
-                        View products
+                      <Button href="/ai-automation" variant="secondary">
+                        See AI automation
                       </Button>
                     </div>
 
@@ -136,177 +124,113 @@ export default function Home() {
                     >
                       <Card className="rounded-xl border border-white/10 bg-black/20 p-4">
                         <div className="text-xs font-semibold text-gold">
-                          Flow
+                          Custom Software
                         </div>
                         <div className="mt-1 text-sm font-semibold text-white">
-                          One deal timeline
+                          Built for your business
                         </div>
                         <div className="mt-1 text-xs text-muted">
-                          Less chasing, less rework.
+                          Internal tools, platforms, and control systems.
                         </div>
                       </Card>
-
                       <Card className="rounded-xl border border-white/10 bg-black/20 p-4">
                         <div className="text-xs font-semibold text-gold">
-                          Proof
+                          AI Automation
                         </div>
                         <div className="mt-1 text-sm font-semibold text-white">
-                          Audit trails + vault
+                          Smarter, faster workflows
                         </div>
                         <div className="mt-1 text-xs text-muted">
-                          Every action recorded.
+                          Automate repetitive work and decision flows.
                         </div>
                       </Card>
-
                       <Card className="rounded-xl border border-white/10 bg-black/20 p-4">
                         <div className="text-xs font-semibold text-gold">
-                          Export
+                          Operational Systems
                         </div>
                         <div className="mt-1 text-sm font-semibold text-white">
-                          One click proof pack
+                          Web-based, always available
                         </div>
                         <div className="mt-1 text-xs text-muted">
-                          Disputes handled fast.
+                          Secure, scalable, and tailored to you.
                         </div>
                       </Card>
                     </div>
-
-                    <div data-hero className="mt-7 text-sm text-muted">
-                      <span className="text-text font-semibold">
-                        {site.pricingNote}
-                      </span>
-                    </div>
                   </div>
-
-                  {/* Right */}
-                  <div data-hero>
-                    <Card className="relative min-h-[380px] overflow-hidden">
-                      {/* subtle glow layer */}
-                      <div className="pointer-events-none absolute inset-0 opacity-70 [background:radial-gradient(900px_circle_at_20%_0%,rgba(255,255,255,0.10),transparent_45%),radial-gradient(700px_circle_at_90%_90%,rgba(255,215,0,0.10),transparent_52%)]" />
-
-                      <div className="relative">
-                        <div className="kicker mb-2 text-xs font-semibold tracking-widest text-gold">
-                          DEAL TIMELINE PREVIEW
-                        </div>
-
-                        <h2 className="mb-3 text-2xl font-semibold text-white md:text-3xl">
-                          Every action becomes proof
-                        </h2>
-
-                        <p className="mb-5 text-base text-muted">
-                          Deposits, approvals, documents, and customer
-                          confirmations are captured automatically, then
-                          exported as a complete proof pack when needed.
-                        </p>
-
-                        {/* timeline */}
-                        <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
-                          <div className="mb-3 flex items-center justify-between">
-                            <div className="text-sm font-semibold text-white">
-                              Deal timeline
-                            </div>
-                            <div className="text-xs text-muted">
-                              Status:{" "}
-                              <span className="text-text font-semibold">
-                                Reserved
-                              </span>
-                            </div>
-                          </div>
-
-                          <ul className="space-y-3">
-                            <li className="flex items-start justify-between gap-4">
-                              <div className="flex gap-3">
-                                <span className="mt-1 h-2 w-2 rounded-full bg-gold" />
-                                <div>
-                                  <div className="text-sm font-semibold text-white">
-                                    Reservation link sent
-                                  </div>
-                                  <div className="text-xs text-muted">
-                                    Tracked delivery + customer open event
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="text-[11px] text-muted">auto</div>
-                            </li>
-
-                            <li className="flex items-start justify-between gap-4">
-                              <div className="flex gap-3">
-                                <span className="mt-1 h-2 w-2 rounded-full bg-gold" />
-                                <div>
-                                  <div className="text-sm font-semibold text-white">
-                                    Deposit received
-                                  </div>
-                                  <div className="text-xs text-muted">
-                                    Receipt generated + payment reference saved
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="text-[11px] text-muted">
-                                receipt
-                              </div>
-                            </li>
-
-                            <li className="flex items-start justify-between gap-4">
-                              <div className="flex gap-3">
-                                <span className="mt-1 h-2 w-2 rounded-full bg-gold" />
-                                <div>
-                                  <div className="text-sm font-semibold text-white">
-                                    Manager approval recorded
-                                  </div>
-                                  <div className="text-xs text-muted">
-                                    Reason note + before/after change log
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="text-[11px] text-muted">
-                                control
-                              </div>
-                            </li>
-
-                            <li className="flex items-start justify-between gap-4">
-                              <div className="flex gap-3">
-                                <span className="mt-1 h-2 w-2 rounded-full bg-gold" />
-                                <div>
-                                  <div className="text-sm font-semibold text-white">
-                                    Delivery checklist signed
-                                  </div>
-                                  <div className="text-xs text-muted">
-                                    Evidence stored with timestamp and identity
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="text-[11px] text-muted">
-                                signature
-                              </div>
-                            </li>
-                          </ul>
-                        </div>
-
-                        {/* footer chips */}
-                        <div className="mt-4 flex flex-wrap gap-2">
-                          <span className="rounded-full border border-white/10 bg-black/20 px-3 py-1 text-xs text-muted">
-                            Audit trail
-                          </span>
-                          <span className="rounded-full border border-white/10 bg-black/20 px-3 py-1 text-xs text-muted">
-                            Evidence vault
-                          </span>
-                          <span className="rounded-full border border-white/10 bg-black/20 px-3 py-1 text-xs text-muted">
-                            Export proof pack
-                          </span>
-                        </div>
-
-                        <div className="mt-5 flex flex-wrap gap-3">
-                          <Button href="/proof-pack" variant="secondary">
-                            View proof pack preview
-                          </Button>
-                          <Button href="/contact" variant="primary">
-                            Request a private consult
-                          </Button>
-                        </div>
-                      </div>
-                    </Card>
-                  </div>
+                  {/* Right: Optionally add a strong visual or animation here */}
                 </div>
+              </div>
+            </Container>
+          </Section>
+
+          {/* About Section */}
+          <Section
+            kicker="ABOUT"
+            title="Software, Automation, and Internal Systems"
+            subtitle="I help businesses build the tools, platforms, and automations that drive real results. No agency fluff, no generic consulting—just premium software and workflow engineering."
+          >
+            <Container>
+              <div className="grid gap-6 md:grid-cols-2" data-reveal>
+                <Card>
+                  <h3 className="mb-4 text-lg font-bold">
+                    Custom Software Development
+                  </h3>
+                  <div className="mb-4 text-base">
+                    Web-based platforms, internal tools, and operational
+                    systems—designed and built for your unique business needs.
+                  </div>
+                  <ul className="mb-4 list-disc pl-6 text-sm">
+                    <li>Modern web apps and dashboards</li>
+                    <li>Internal workflow and control systems</li>
+                    <li>Secure, scalable, and maintainable code</li>
+                  </ul>
+                </Card>
+                <Card>
+                  <h3 className="mb-4 text-lg font-bold">
+                    AI & Workflow Automation
+                  </h3>
+                  <div className="mb-4 text-base">
+                    Automate repetitive work, decision flows, and business
+                    processes with AI and smart integrations.
+                  </div>
+                  <ul className="mb-4 list-disc pl-6 text-sm">
+                    <li>AI-powered workflow automation</li>
+                    <li>Integrations with your existing systems</li>
+                    <li>Reduce manual work and errors</li>
+                  </ul>
+                </Card>
+              </div>
+            </Container>
+          </Section>
+
+          {/* Product Suite Section */}
+          <LiquidGlowSweep id="ps" />
+          <ProductSuiteSection />
+
+          <CTA />
+          <Section
+            title="Contact"
+            subtitle="Ready to build? Let's talk about your software, automation, or internal system needs."
+          >
+            <Container>
+              <div className="grid gap-6 md:grid-cols-2">
+                <ContactFormBlock />
+                <Card>
+                  <div className="text-sm font-semibold">Direct</div>
+                  <div className="mt-3 text-sm text-muted">
+                    Email:{" "}
+                    <span className="text-text">{site.contactEmail}</span>
+                  </div>
+                  <div className="mt-3 text-sm text-muted">
+                    Number: +97156 87 44 925
+                  </div>
+                  <div className="mt-6 rounded-2xl border border-line bg-bg p-4">
+                    <div className="text-xs font-semibold text-muted">Note</div>
+                    <div className="mt-2 text-xs text-muted">
+                      Premium, direct, and software-focused. No agency fluff.
+                    </div>
+                  </div>
+                </Card>
               </div>
             </Container>
           </Section>

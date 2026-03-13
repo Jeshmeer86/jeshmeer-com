@@ -66,74 +66,15 @@ export default function DocumentsSection({
       setError("Choose a file to upload");
       return;
     }
-
-    const formData = new FormData();
-    formData.set("file", selectedFile);
-    formData.set("documentType", documentType);
-
-    setLoading(true);
-
-    try {
-      const res = await fetch(`/api/deals/${dealId}/documents`, {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!res.ok) {
-        const data = (await res.json().catch(() => null)) as {
-          error?: string;
-        } | null;
-        throw new Error(data?.error || "Failed to upload document");
-      }
-
-      await refreshDocuments();
-      router.refresh();
-      setSuccess("Document uploaded");
-      setSelectedFile(null);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
-    } catch (uploadError) {
-      setError(
-        uploadError instanceof Error
-          ? uploadError.message
-          : "Failed to upload document",
-      );
-    } finally {
-      setLoading(false);
-    }
   }
 
   return (
     <div className="border rounded p-4 space-y-4">
-      <div>
-        <div className="font-semibold">Documents</div>
-        <div className="text-sm opacity-80">
-          Upload one PDF or image and keep it private behind authenticated
-          routes.
-        </div>
+      <div className="font-semibold">Documents</div>
+      <div className="text-sm opacity-80">
+        Upload one PDF or image and keep it private behind authenticated access.
       </div>
-
-      <form
-        onSubmit={handleUpload}
-        className="grid gap-3 md:grid-cols-[minmax(0,220px)_1fr_auto] md:items-end"
-      >
-        <label className="flex flex-col gap-1 text-sm">
-          <span>Document type</span>
-          <select
-            value={documentType}
-            onChange={(event) => setDocumentType(event.target.value)}
-            className="border rounded px-3 py-2 bg-transparent"
-            disabled={loading}
-          >
-            {DEAL_DOCUMENT_TYPES.map((value) => (
-              <option key={value} value={value}>
-                {DEAL_DOCUMENT_TYPE_LABELS[value]}
-              </option>
-            ))}
-          </select>
-        </label>
-
+      <form onSubmit={handleUpload} className="space-y-4 mt-4">
         <label className="flex flex-col gap-1 text-sm">
           <span>File</span>
           <input
@@ -147,7 +88,6 @@ export default function DocumentsSection({
             disabled={loading}
           />
         </label>
-
         <button
           type="submit"
           className="bg-blue-700 text-white px-4 py-2 rounded disabled:opacity-50"
@@ -156,10 +96,8 @@ export default function DocumentsSection({
           {loading ? "Uploading..." : "Upload"}
         </button>
       </form>
-
       {error && <div className="text-sm text-red-400">{error}</div>}
       {success && <div className="text-sm text-green-400">{success}</div>}
-
       <div className="border rounded overflow-hidden">
         <div className="grid grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)_auto] gap-3 border-b px-3 py-2 text-xs font-semibold uppercase tracking-wide opacity-70">
           <div>Document</div>
@@ -167,7 +105,6 @@ export default function DocumentsSection({
           <div>Uploaded</div>
           <div>Actions</div>
         </div>
-
         {documents.length === 0 ? (
           <div className="p-3 text-sm opacity-80">
             No documents uploaded yet.
@@ -188,16 +125,13 @@ export default function DocumentsSection({
                     {formatDealDocumentSize(document.fileSize)}
                   </div>
                 </div>
-
                 <div className="text-xs sm:text-sm">
                   {document.documentTypeLabel}
                 </div>
-
                 <div className="text-xs sm:text-sm opacity-80">
                   <div>{new Date(document.createdAt).toLocaleString()}</div>
                   <div>{document.uploadedByDisplay || "Unknown user"}</div>
                 </div>
-
                 <div className="flex items-start gap-3 text-xs sm:text-sm">
                   <a
                     href={`/api/deals/${dealId}/documents/${document.id}`}

@@ -1,0 +1,46 @@
+// Types for Rentals module
+import type {
+  RentalQuoteRequest,
+  RentalBooking,
+  RentalDocument,
+  RentalDeposit,
+  RentalIssue,
+  RentalMessageLog,
+  RentalReminder,
+  RentalEvent,
+  RentalQuoteRequestStatus,
+  RentalBookingStatus,
+  RentalDepositStatus,
+  RentalIssueType,
+  RentalIssuePriority,
+  RentalIssueStatus,
+  RentalReminderType,
+  RentalReminderStatus,
+  RentalEventType,
+  RentalDocumentType,
+  RentalMessageDirection,
+  RentalMessageChannel
+} from '@prisma/client';
+
+export type {
+  RentalQuoteRequest,
+  RentalBooking,
+  RentalDocument,
+  RentalDeposit,
+  RentalIssue,
+  RentalMessageLog,
+  RentalReminder,
+  RentalEvent,
+  RentalQuoteRequestStatus,
+  RentalBookingStatus,
+  RentalDepositStatus,
+  RentalIssueType,
+  RentalIssuePriority,
+  RentalIssueStatus,
+  RentalReminderType,
+  RentalReminderStatus,
+  RentalEventType,
+  RentalDocumentType,
+  RentalMessageDirection,
+  RentalMessageChannel
+};

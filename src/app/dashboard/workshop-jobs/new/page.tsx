@@ -1,69 +1,25 @@
-import { requireDashboardContext } from "@/lib/tenant";
-import { prisma } from "@/lib/prisma";
-import { redirect } from "next/navigation";
+"use client";
+// ...existing code...
+import { createWorkshopJob } from "./server-actions";
 
-async function createWorkshopJob(formData: FormData) {
-  "use server";
-  const ctx = await requireDashboardContext();
-  if (!ctx.ok) return;
-
-  const fullName = String(formData.get("fullName") ?? "").trim();
-  const phone = String(formData.get("phone") ?? "").trim();
-  const make = String(formData.get("make") ?? "").trim();
-  const model = String(formData.get("model") ?? "").trim();
-  const year = Number(formData.get("year") ?? "");
-  const plateNumber = String(formData.get("plateNumber") ?? "").trim();
-  const complaint = String(formData.get("complaint") ?? "").trim();
-  const source = String(formData.get("source") ?? "OTHER");
-  const priority = String(formData.get("priority") ?? "NORMAL");
-
-  if (!fullName || !make || !model) return;
-
-  // Create or find customer
-  let customer = await prisma.customer.findFirst({
-    where: { orgId: ctx.dbOrgId, fullName, phone },
-  });
-  if (!customer) {
-    customer = await prisma.customer.create({
-      data: { orgId: ctx.dbOrgId, fullName, phone },
-    });
-  }
-
-  // Create vehicle
-  const vehicle = await prisma.vehicle.create({
-    data: {
-      orgId: ctx.dbOrgId,
-      customerId: customer.id,
-      make,
-      model,
-      year: isNaN(year) ? undefined : year,
-      plateNumber,
-    },
-  });
-
-  // Create job
-  const job = await prisma.workshopJob.create({
-    data: {
-      orgId: ctx.dbOrgId,
-      customerId: customer.id,
-      vehicleId: vehicle.id,
-      title: `${make} ${model} (${plateNumber || "No Plate"})`,
-      complaint,
-      source,
-      priority,
-      createdBy: ctx.dbUserId,
-    },
-  });
-
-  redirect(`/dashboard/workshop-jobs/${job.id}`);
-}
+import React from "react";
 
 export default function NewWorkshopJobPage() {
+  // Duplicate-submit protection
+  const [saving, setSaving] = React.useState(false);
+
   return (
     <section className="max-w-xl mx-auto space-y-8">
       <h1 className="text-2xl font-bold mb-4">New Workshop Job</h1>
       <form
-        action={createWorkshopJob}
+        action={async (formData) => {
+          setSaving(true);
+          try {
+            await createWorkshopJob(formData);
+          } finally {
+            setSaving(false);
+          }
+        }}
         className="space-y-4 bg-zinc-900 p-6 rounded-xl border border-zinc-800"
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -133,6 +89,8 @@ export default function NewWorkshopJobPage() {
               <option value="OTHER">Other</option>
             </select>
           </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium mb-1">Priority</label>
             <select name="priority" className="input input-bordered w-full">
@@ -145,8 +103,12 @@ export default function NewWorkshopJobPage() {
             </select>
           </div>
         </div>
-        <button type="submit" className="btn btn-gold w-full mt-4">
-          Create Job
+        <button
+          type="submit"
+          className="btn btn-gold w-full mt-4"
+          disabled={saving}
+        >
+          {saving ? "Saving..." : "Create Job"}
         </button>
       </form>
     </section>
