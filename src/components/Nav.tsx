@@ -12,7 +12,7 @@ const nav = [
   { href: "/", label: "Home" },
   { href: "/ai-automation", label: "AI Automation" },
   { href: "/products", label: "Product Suite" },
-  { href: "/how-we-work", label: "How I Work" },
+  { href: "/how-we-work", label: "How we work" },
   { href: "/contact", label: "Contact" },
 ];
 

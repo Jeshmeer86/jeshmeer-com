@@ -84,13 +84,13 @@ export function ProductSuiteSection() {
           </Card>
 
           <Card>
-            <div className="text-sm font-semibold">How I Work</div>
+            <div className="text-sm font-semibold">How we work</div>
             <p className="mt-2 text-sm text-muted">
               Premium, direct, and software-focused. No agency fluff.
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
               <Button href="/how-we-work" variant="secondary">
-                How I Work
+                How we work
               </Button>
               <Button href="/contact" variant="primary">
                 Start your project

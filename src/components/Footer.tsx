@@ -30,7 +30,7 @@ export function Footer() {
                 Product Suite
               </Link>
               <Link href="/how-we-work" className="hover:text-text">
-                How I Work
+                How we work
               </Link>
             </div>
             <div className="mt-6 text-sm font-semibold">Legal</div>
