@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-import type { DealEventType } from "@prisma/client";
+import type { DealEventType } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 import { requireDashboardContext } from "@/lib/tenant";
 
