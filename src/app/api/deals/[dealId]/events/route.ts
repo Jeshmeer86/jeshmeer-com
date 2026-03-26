@@ -108,7 +108,7 @@ export async function POST(
   const event = await prisma.dealEvent.create({
     data: {
       dealId,
-      orgId: deal.orgId, // Use the orgId from the fetched deal as the source of truth
+      organizationId: deal.orgId, // Use the orgId from the fetched deal as the source of truth
       type,
       message,
       actorId: context.dbUserId ?? undefined,
