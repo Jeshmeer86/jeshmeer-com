@@ -51,7 +51,7 @@ export async function GET(
   }
 
   const events = await prisma.dealEvent.findMany({
-    where: { dealId, orgId: context.dbOrgId },
+    where: { dealId },
     orderBy: { createdAt: "asc" },
   });
 
