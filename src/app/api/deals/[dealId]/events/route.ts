@@ -1,5 +1,25 @@
 import { NextResponse, type NextRequest } from "next/server";
-import type { DealEventType } from "@/generated/prisma/client";
+
+type DealEventTypeValue =
+  | "NOTE"
+  | "REVIEWED"
+  | "DEPOSIT_APPROVED"
+  | "DEAL_CREATED"
+  | "DOCUMENT_UPLOADED"
+  | "EXPORT_JSON"
+  | "EXPORT_HTML"
+  | "STATUS_CHANGED";
+
+const allowedTypes = [
+  "NOTE",
+  "REVIEWED",
+  "DEPOSIT_APPROVED",
+  "DEAL_CREATED",
+  "DOCUMENT_UPLOADED",
+  "EXPORT_JSON",
+  "EXPORT_HTML",
+  "STATUS_CHANGED",
+] as const;
 import { prisma } from "@/lib/prisma";
 import { requireDashboardContext } from "@/lib/tenant";
 
@@ -65,28 +85,16 @@ export async function POST(
     return NextResponse.json({ error: "Deal not found" }, { status: 404 });
   }
 
+
   const body = (await req.json().catch(() => null)) as {
     message?: string;
-    type?: DealEventType;
+    type?: string;
   } | null;
 
-  let type: DealEventType = "NOTE";
+  let type: DealEventTypeValue = "NOTE";
 
-  if (body?.type && typeof body.type === "string") {
-    if (
-      [
-        "NOTE",
-        "REVIEWED",
-        "DEPOSIT_APPROVED",
-        "DEAL_CREATED",
-        "DOCUMENT_UPLOADED",
-        "EXPORT_JSON",
-        "EXPORT_HTML",
-        "STATUS_CHANGED",
-      ].includes(body.type)
-    ) {
-      type = body.type as DealEventType;
-    }
+  if (body?.type && allowedTypes.includes(body.type as DealEventTypeValue)) {
+    type = body.type as DealEventTypeValue;
   }
 
   const message =
