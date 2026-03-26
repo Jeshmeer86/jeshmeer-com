@@ -111,7 +111,6 @@ export async function POST(
       organizationId: deal.orgId, // Use the orgId from the fetched deal as the source of truth
       type,
       message,
-      actorId: context.dbUserId ?? undefined,
     },
   });
 
